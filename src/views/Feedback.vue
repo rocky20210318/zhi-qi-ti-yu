@@ -2,7 +2,7 @@
     <div id="feedback">
         <van-nav-bar fixed left-arrow @click-left="$router.go(-1)" placeholder title="问题反馈" />
         <div class="textarea"><field v-model="val" type="textarea" rows="10" placeholder="请输入想要反馈的问题" /></div>
-        <div class="button"><Button @click="feedback" :loading="loading" round block color="#faa641">提交反馈</Button></div>
+        <div class="button"><Button @click="feedback" :loading="loading" round block color="#313635">提交反馈</Button></div>
     </div>
 </template>
 

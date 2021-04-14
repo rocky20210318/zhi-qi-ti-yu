@@ -20,7 +20,7 @@
 
 <script>
 import { Empty } from 'vant'
-import { collectList } from '@/services'
+import { getCollectionList } from '@/services'
 import GoodsList from '../components/goods-list'
 
 export default {
@@ -43,10 +43,10 @@ export default {
     },
     methods: {
         async getList () {
-            const listData = await collectList()
-            listData.map(i => {
-                i.id = i.valueId
-            })
+            const listData = await getCollectionList()
+            // listData.map(i => {
+            //     i.id = i.
+            // })
             this.listData = listData
         }
     }

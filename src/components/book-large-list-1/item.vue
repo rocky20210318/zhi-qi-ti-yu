@@ -1,44 +1,27 @@
 <template>
     <li
-        v-if="isRemove && data.commodity"
+        v-if="isRemove"
         class="book-large-list-item"
     >
-        <van-row
-            v-if="$parent.canHandle"
-            type="flex"
-            justify="space-between"
-            align="center"
-            class="operators"
-        >
+        <van-row v-if="$parent.canHandle" type="flex" justify="space-between" align="center" class="operators">
             <div
-                :class="['checkbox', { 'is-checked': isChecked }]"
+                :class="['checkbox', { 'is-checked': data.checked }]"
                 @click="handleItemClick"
             />
             <van-icon name="delete" size="20px" @click="handleRemove" />
         </van-row>
-        <div
-            v-if="!$parent.canHandle"
-            class="order-status"
-            :style="{ color: statusColor }"
-        >
-            {{ status === 0 ? '待付款' : '待发货' }}
-        </div>
         <van-row type="flex" justify="space-between" align="center" class="book-detail">
-            <!-- <img :src="data.commodity.thumbnail"> -->
-            <van-image lazy-load fit="cover" :src="data.commodity.thumbnail" class="img" />
-            <!-- <div>
-                <h5>{{ data.commodity.title }}</h5>
-                <span v-if="!$parent.canHandle">x{{ data.buyCount }}</span>
-            </div> -->
+            <van-image lazy-load fit="cover" :src="data.thumbnail" class="img" />
             <div class="right">
-                <h5 class="van-multi-ellipsis--l2">{{ data.commodity.title }}</h5>
+                <h5 class="van-multi-ellipsis--l2">{{ data.title }}</h5>
                 <van-row type="flex" justify="space-between" align="center">
                     <!-- <span v-if="$parent.canHandle" class="label">下单后抽奖</span> -->
-                    <van-row type="flex" justify="space-between" align="center" class="price-nub"><span class="price">¥{{ data.commodity.price.toFixed(2) }}</span><span v-if="!$parent.canHandle" class="nub">x{{ data.buyCount }}</span></van-row>
+                    <van-row type="flex" justify="space-between" align="center" class="price-nub"><span class="price">¥{{ data.price.toFixed(2) }}</span><span v-if="!$parent.canHandle" class="nub">x{{ data.buyCount }}</span></van-row>
                     <span>
                         <number-input
                             v-if="$parent.canHandle"
-                            v-model="count"
+                            v-model="data.buyCount"
+                            class="nub"
                             :min="1"
                             inline
                             controls
@@ -50,21 +33,17 @@
                 </van-row>
             </div>
         </van-row>
-        <van-row
-            align="center"
-            justify="between"
-        >
-        </van-row>
     </li>
 </template>
 
 <script>
 import NumberInput from '../../components/number-input'
-import { Button } from 'vant'
+// import { NaclButton } from 'nacl-ui'
+import { cartChecked, cartUpdate, cartDelete } from '../../services'
 
 export default {
-    name: 'item',
-    components: { NumberInput, Button },
+    name: 'large-list-item',
+    components: { NumberInput },
     props: {
         data: {
             type: Object,
@@ -73,14 +52,9 @@ export default {
         orderId: {
             type: String,
             default: ''
-        },
-        status: {
-            type: Number,
-            default: 0
         }
     },
     data () {
-        // console.log(this.data, this.orderId, this.status)
         return {
             count: 1,
             isChecked: false,
@@ -92,41 +66,57 @@ export default {
             return this.data.status === 0 ? '#999999' : '#ea6932'
         }
     },
+    watch: {
+        'data.buyCount' () {
+            cartUpdate({
+                goodsId: this.data.goodsId,
+                number: this.data.buyCount,
+                cartId: this.data.id
+            })
+        }
+    },
     methods: {
-        handleItemClick () {
-            this.isChecked = !this.isChecked
-            this.$parent.handleItemClick(this.data.cartId, this.data.commodity.id, this.count, this.data.commodity.price, this.data.commodity)
+        async handleItemClick () {
+            await cartChecked({
+                cartIds: this.data.id,
+                isChecked: this.data.checked ? 0 : 1
+            })
+            this.data.checked = !this.data.checked
         },
         handleNumberChange () {
-            this.$parent.handleNumberChange(this.data.cartId, this.data.commodity.id, this.count, this.data.commodity.price)
+            this.$parent.handleNumberChange(this.data.cartId, this.data.id, this.count, this.data.price)
         },
-        handleRemove () {
+        async handleRemove () {
+            await cartDelete({ cartIds: this.data.id })
             this.isRemove = false
-            this.$parent.handleRemove(this.data.cartId, this.data.commodity.id)
+            this.$parent.handleRemove(this.data.cartId, this.data.id)
         },
         removeOrder () {
             // console.log(this.data)
-            this.$parent.orderRemove(this.orderId, this.data.commodity.id)
+            this.$parent.orderRemove(this.orderId, this.data.id)
         }
     }
 }
 </script>
 
 <style scoped lang="scss">
+.price-nub {
+    flex: 1;
+}
 .remove-order {
-    width: 170px;
-    height: 45px;
-    line-height: 45px;
-    border-radius: 20px;
-    background: #fff;
-    border: 1.5px solid #999;
-    color: #999;
+  width: 170px;
+  height: 45px;
+  line-height: 45px;
+  border-radius: 20px;
+  background: #fff;
+  border: 1.5px solid #999;
+  color: #999;
 }
 .book-large-list-item {
-    padding: 20px 30px;
-    background: #fff;
-    border-radius: 20px;
-    margin-bottom: 30px;
+  padding: 20px 30px;
+  background: #fff;
+  border-radius: 20px;
+  margin-bottom: 30px;
   .order-status {
     font-size: 14px * 2;
     color: #ea6932;
@@ -141,7 +131,7 @@ export default {
       border-radius: 50%;
       box-sizing: border-box;
       &.is-checked {
-        background: #d0021b;
+        background: #313635;
         border: none;
         text-align: center;
         &:after {
@@ -156,20 +146,22 @@ export default {
         }
       }
     }
-    .remove {
-      width: 32px;
-      height: 34px;
-      background-size: 100%;
-    }
+    // .remove {
+    //   width: 32px;
+    //   height: 34px;
+    //   background-image: url("../../assets/trash.png");
+    //   background-size: 100%;
+    // }
     margin-bottom: 20px;
   }
   .book-detail {
     .img {
-        width: 220px;
-        height: 220px;
-        margin-right: 32px;
-        border-radius: 22px;
-        overflow: hidden;
+      width: 220px;
+      height: 220px;
+      // height: auto;
+      margin-right: 32px;
+      border-radius: 22px;
+      overflow: hidden;
     }
     h5 {
         flex: 0;
@@ -184,8 +176,17 @@ export default {
     .right {
         flex: 1;
     }
-    span {
-      display: block;
+    .label {
+      font-size: 24px;
+      color: #121314;
+    }
+    .price{
+      font-size: 28px;
+      color: #121314;
+    }
+    .nub {
+      // display: block;
+      float: right;
       text-align: right;
     }
     .author {

@@ -5,10 +5,10 @@
             v-model="chosenAddressId"
             :list="list"
             default-tag-text="默认"
-            :switchable="false"
+            :switchable="switchable"
             @add="$router.push('/address')"
             @edit="onEdit"
-            @click-item="select"
+            @select="select"
         />
         <empty v-if="typeof list !== 'object'" description="暂未添加地址" />
     </div>
@@ -16,7 +16,7 @@
 
 <script>
 import { AddressList, Empty } from 'vant'
-import { getAddressList } from '../services'
+import { getAddress } from '../services'
 
 export default {
     name: 'app',
@@ -25,21 +25,24 @@ export default {
         Empty
     },
     data () {
+        // console.log(this.$route.query)
         return {
             chosenAddressId: '',
-            list: []
+            list: [],
+            switchable: !this.$route.query.switchable
         }
     },
     computed: {
     },
     async created () {
+        console.log(this.$route)
         this.getList()
     },
     mounted () {
     },
     methods: {
         async getList () {
-            const listData = await getAddressList()
+            const listData = await getAddress()
             if (listData.length === 0) this.list = undefined
             else {
                 listData.forEach(i => {
@@ -47,14 +50,14 @@ export default {
                 })
                 this.list = listData
             }
-            console.log(this.list, listData, typeof listData)
+            // console.log(this.list, listData, typeof listData)
         },
         onEdit (val) {
-            // console.log(val)
             this.$router.push('/address?id=' + val.id)
         },
         select (item, index) {
-            this.$router.replace('/order-detail?index=' + index)
+            // this.$router.replace('/order-detail?index=' + index)
+            this.$router.go(-1)
             console.log(index)
         }
     }
@@ -63,15 +66,15 @@ export default {
 <style lang="scss">
 #address-list {
     .van-tag--danger {
-        background: #faa641;
+        background: #313635;
     }
     .van-address-item .van-radio__icon--checked .van-icon {
-        background: #faa641;
-        border-color: #faa641;
+        background: #313635;
+        border-color: #313635;
     }
     .van-button--danger {
-        border-color: #faa641;
-        background: #faa641;
+        border-color: #313635;
+        background: #313635;
     }
 }
 </style>

@@ -39,7 +39,7 @@
 // import BasicButton from '../components/basic-button'
 import BookLargeList from '../components/book-large-list/index'
 // import recommendedList from '../components/recommended-list'
-import { getCart } from '../services'
+import { getCart, removeCartItem, addOrder } from '../services'
 
 export default {
     name: 'cart',
@@ -47,49 +47,75 @@ export default {
     data () {
         return {
             chooseData: [],
-            // total: 0,
+            total: 0,
             deleteTotal: 0,
-            cartList: []
+            // cartList: []
         }
     },
     computed: {
-        // cartList () {
-        //     console.log(getCart())
-        //     return getCart()
-        // },
+        cartList () {
+            console.log(getCart())
+            return getCart()
+        },
         totalCount () {
             return this.cartList.length - this.deleteTotal
         },
-        total () {
-            let total = 0
-            for (const i in this.cartList) {
-                // console.log(i)
-                const data = this.cartList[i]
-                total += data.buyCount * data.price
-            }
-            return total
-        }
+        // total () {
+        //     let total = 0
+        //     for (const i in this.cartList) {
+        //         // console.log(i)
+        //         const data = this.cartList[i]
+        //         total += data.buyCount * data.price
+        //     }
+        //     return total
+        // }
     },
     async created () {
-        this.cartList = await getCart()
+        // this.cartList = await getCart()
     },
     mounted () {
     },
     methods: {
+        // onCartChange (data, total) {
+        //     this.chooseData = data
+        //     this.total = total
+        // },
+        // async onCartRemove (cartId) {
+        //     // this.cartList = await getCart()
+        // },
+        // handleBuy () {
+        //     const checkedData = this.cartList.filter((item) => item.checked)
+        //     if (checkedData.length === 0) {
+        //         this.$toast('请勾选商品')
+        //         return false
+        //     }
+        //     this.$router.push('/order-detail')
+        // }
         onCartChange (data, total) {
             this.chooseData = data
             this.total = total
         },
-        async onCartRemove (cartId) {
-            // this.cartList = await getCart()
+        onCartRemove (cartId) {
+            this.deleteTotal++
+            removeCartItem(cartId)
         },
         handleBuy () {
-            const checkedData = this.cartList.filter((item) => item.checked)
-            if (checkedData.length === 0) {
+            if (!this.chooseData || this.chooseData.length === 0) {
                 this.$toast('请勾选商品')
                 return false
             }
-            this.$router.push('/order-detail')
+            console.log(this.chooseData)
+            let data = this.chooseData.map((item) => {
+                removeCartItem(item.cartId)
+                return {
+                    bookId: item.bookId,
+                    buyCount: item.count,
+                    commodity: item.commodity
+                }
+            })
+            console.log(data)
+            let orderId = addOrder(data)
+            this.$router.push(`/order-detail/${orderId}`)
         }
     }
 }
@@ -111,7 +137,7 @@ $footer-height: 58px * 2;
     padding: 90px 34px 38px;
     height: 328px;
     //   background-image: url(../assets/cart-bg.png);
-    background: linear-gradient(180deg, #fcd755 0%, #faa641 100%) ;
+    background: linear-gradient(180deg,#fcd755 0%,#d81e06 100%) ;
     box-sizing: border-box;
     color: #ffffff;
     .title {
@@ -143,7 +169,7 @@ $footer-height: 58px * 2;
         width: 124px * 2;
         height: 41px * 2;
         line-height: 41px * 2;
-        background: linear-gradient(180deg, #fcd755 0%, #faa641 100%);
+        background: linear-gradient(180deg,#fcd755 0%,#d81e06 100%);
         color: #fff;
         font-size: 18px * 2;
         text-align: center;

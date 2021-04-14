@@ -2,7 +2,7 @@
     <div id="goods-details">
         <van-nav-bar class="nav" :border="false" fixed left-arrow  @click-left="$router.go(-1)"/>
         <swipe class="banner" indicator-color="white" :show-indicators="false" :autoplay="2500" @change="onChange">
-            <swipe-item v-if="details.imgSrcArray" ><van-image lazy-load :src="details.imgSrcArray[0]" fit="cover" class="img" /></swipe-item>
+            <swipe-item v-if="details.thumbnail" ><van-image lazy-load :src="details.thumbnail" class="img" /></swipe-item>
         </swipe>
         <skeleton :loading="!details.title" class="skeleton" :row="2">
             <van-row v-if="true" type="flex" justify="space-between" align="center" class="title-pire">
@@ -25,14 +25,14 @@
         </skeleton>
         <ul class="data">
             <skeleton :loading="!details.title" class="skeleton" :row="4">
-                <li class="item"><span class="lable">剩余</span>{{ details.price ? 3 : 400 }}件</li>
+                <!-- <li class="item"><span class="lable">剩余</span>{{ details.price ? 3 : 400 }}件</li> -->
                 <li class="item" @click="isShowSku = true"><span class="lable">尺码</span><van-icon class="arrow" name="arrow" /></li>
                 <li class="item"><span class="lable">保障</span>付款2天内发货</li>
                 <li class="item"><span class="lable">活动</span>全场8折&nbsp;•&nbsp;限时包邮</li>
             </skeleton>
         </ul>
         <div class="member-box">
-            <div class="member"><router-link to="/member"><img src="../assets/my-banner.jpg" alt=""></router-link></div>
+            <div class="member"><router-link to="/member"><img src="../assets/my-banner.jpeg" alt=""></router-link></div>
             <van-row type="flex" justify="space-between" align="center" class="tap">
                 <p class="item">•&nbsp;全场8折</p>
                 <p class="item">•&nbsp;全场免邮</p>
@@ -49,7 +49,7 @@
         <div class="details">
             <p class="title">商品详情</p>
             <skeleton :loading="!details.details" class="skeleton" :row="5">
-                <div class="html" v-html="details.details"></div>
+                <div id="html" ref="html" v-html="details.details"></div>
             </skeleton>
         </div>
         <goods-action>
@@ -57,7 +57,7 @@
             <goods-action-icon icon="cart-o" text="购物车" to="/Cart" />
             <goods-action-icon text="收藏">
                 <template #icon>
-                    <star :details="details" />
+                    <star :details="details" :id="id" />
                 </template>
             </goods-action-icon>
             <template v-if="!price">
@@ -79,7 +79,7 @@
             v-if="details.title"
             v-model="isShowSku"
             :sku="sku"
-            :goods="{ picture: details.imgSrcArray[0] }"
+            :goods="{ picture: details.thumbnail }"
             :goods-id="id"
             @buy-clicked="onBuy"
             @add-cart="onAddCart"
@@ -89,8 +89,9 @@
 
 <script>
 import { Swipe, SwipeItem, GoodsAction, GoodsActionIcon, GoodsActionButton, Skeleton, Sku } from 'vant'
-import { getGoodsDetail, getUserData, addCart, fastadd } from '../services'
+import { getUserData, addCart, addOrder, doExchange } from '../services'
 import Star from '../components/star'
+import AV from 'leancloud-storage'
 
 export default {
     name: 'goods-details',
@@ -117,111 +118,63 @@ export default {
         sku () {
             if (this.details.title) {
                 const price = this.price || this.details.price
-                if (this.details.title.indexOf('衣') !== -1 || this.details.title.indexOf('裤') !== -1) {
+                this.details.sizeList = this.details.sizeList || ''
+                this.details.colorList = this.details.colorList || ''
+                const colorList = this.details.colorList.split(/[\r\n\r\n]+/)
+                const sizeList = this.details.sizeList.split(/[\r\n\r\n]+/)
+                const colorTree =  colorList.map((i, index) => {
+                                        return {
+                                            id: index,
+                                            name: i
+                                        }
+                                    })
+                const sizeTree =  sizeList.map((i, index) => {
+                                        return {
+                                            id: index,
+                                            name: i
+                                        }
+                                    })
+                // console.log([...colorTree.length])
+                let listData = doExchange([colorTree.map(i => i.id), sizeTree.map(i => i.id)])
+                listData = listData.map((i, index) => {
                     return {
-                        // 所有sku规格类目与其值的从属关系，比如商品有颜色和尺码两大类规格，颜色下面又有红色和蓝色两个规格值。
-                        // 可以理解为一个商品可以有多个规格类目，一个规格类目下可以有多个规格值。
-                        tree: [
-                            {
-                                k: '尺码', // skuKeyName：规格类目名称
-                                k_s: 's1', // skuKeyStr：sku 组合列表（下方 list）中当前类目对应的 key 值，value 值会是从属于当前类目的一个规格值 id
-                                v: [
-                                    {
-                                        id: '1', // skuValueId：规格值 id
-                                        name: 'S' // skuValueName：规格值名称
-                                    },
-                                    {
-                                        id: '2',
-                                        name: 'M'
-                                    },
-                                    {
-                                        id: '3', // skuValueId：规格值 id
-                                        name: 'L' // skuValueName：规格值名称
-                                    },
-                                    {
-                                        id: '4',
-                                        name: 'XL'
-                                    }
-                                ],
-                                largeImageMode: false //  是否展示大图模式
-                            }
-                        ],
-                        // 所有 sku 的组合列表，比如红色、M 码为一个 sku 组合，红色、S 码为另一个组合
-                        list: [
-                            {
-                                id: 2259, // skuId
-                                s1: '1', // 规格类目 k_s 为 s1 的对应规格值 id
-                                s2: '1', // 规格类目 k_s 为 s2 的对应规格值 id
-                                price: price * 100, // 价格（单位分）
-                                stock_num: 100 // 当前 sku 组合对应的库存
-                            },
-                            {
-                                id: 2259, // skuId
-                                s1: '2', // 规格类目 k_s 为 s1 的对应规格值 id
-                                s2: '1', // 规格类目 k_s 为 s2 的对应规格值 id
-                                price: price * 100, // 价格（单位分）
-                                stock_num: 100 // 当前 sku 组合对应的库存
-                            },
-                            {
-                                id: 2259, // skuId
-                                s1: '3', // 规格类目 k_s 为 s1 的对应规格值 id
-                                s2: '1', // 规格类目 k_s 为 s2 的对应规格值 id
-                                price: price * 100, // 价格（单位分）
-                                stock_num: 100 // 当前 sku 组合对应的库存
-                            },
-                            {
-                                id: 2259, // skuId
-                                s1: '4', // 规格类目 k_s 为 s1 的对应规格值 id
-                                s2: '1', // 规格类目 k_s 为 s2 的对应规格值 id
-                                price: price * 100, // 价格（单位分）
-                                stock_num: 100 // 当前 sku 组合对应的库存
-                            }
-                        ],
-                        price: price, // 默认价格（单位元）
-                        stock_num: 400, // 商品总库存
-                        // collection_id: 2261, // 无规格商品 skuId 取 collection_id，否则取所选 sku 组合对应的 id
-                        none_sku: false, // 是否无规格商品
-                        hide_stock: false // 是否隐藏剩余库存
+                        id: index, // skuId
+                        s1: i[0], // 规格类目 k_s 为 s1 的对应规格值 id
+                        s2: i[1], // 规格类目 k_s 为 s2 的对应规格值 id
+                        price: price * 100, // 价格（单位分）
+                        stock_num: 50 // 当前 sku 组合对应的库存
                     }
-                } else {
-                    return {
-                        // 所有sku规格类目与其值的从属关系，比如商品有颜色和尺码两大类规格，颜色下面又有红色和蓝色两个规格值。
-                        // 可以理解为一个商品可以有多个规格类目，一个规格类目下可以有多个规格值。
-                        tree: [
-                            {
-                                k: '尺码', // skuKeyName：规格类目名称
-                                k_s: 's1', // skuKeyStr：sku 组合列表（下方 list）中当前类目对应的 key 值，value 值会是从属于当前类目的一个规格值 id
-                                v: [
-                                    {
-                                        id: '1', // skuValueId：规格值 id
-                                        name: '均码' // skuValueName：规格值名称
-                                    }
-                                ],
-                                largeImageMode: false //  是否展示大图模式
-                            }
-                        ],
-                        // 所有 sku 的组合列表，比如红色、M 码为一个 sku 组合，红色、S 码为另一个组合
-                        list: [
-                            {
-                                id: 2259, // skuId
-                                s1: '1', // 规格类目 k_s 为 s1 的对应规格值 id
-                                s2: '1', // 规格类目 k_s 为 s2 的对应规格值 id
-                                price: price * 100, // 价格（单位分）
-                                stock_num: 400 // 当前 sku 组合对应的库存
-                            }
-                        ],
-                        price: price, // 默认价格（单位元）
-                        stock_num: 400, // 商品总库存
-                        // collection_id: 2261, // 无规格商品 skuId 取 collection_id，否则取所选 sku 组合对应的 id
-                        none_sku: false, // 是否无规格商品
-                        hide_stock: false // 是否隐藏剩余库存
-                    }
+                })
+                return {
+                    // 所有sku规格类目与其值的从属关系，比如商品有颜色和尺码两大类规格，颜色下面又有红色和蓝色两个规格值。
+                    // 可以理解为一个商品可以有多个规格类目，一个规格类目下可以有多个规格值。
+                    tree: [
+                        {
+                            k: '颜色', // skuKeyName：规格类目名称
+                            k_s: 's1', // skuKeyStr：sku 组合列表（下方 list）中当前类目对应的 key 值，value 值会是从属于当前类目的一个规格值 id
+                            v: colorTree,
+                            largeImageMode: false //  是否展示大图模式
+                        },
+                        {
+                            k: '尺码', // skuKeyName：规格类目名称
+                            k_s: 's2', // skuKeyStr：sku 组合列表（下方 list）中当前类目对应的 key 值，value 值会是从属于当前类目的一个规格值 id
+                            v: sizeTree,
+                            largeImageMode: false //  是否展示大图模式
+                        }
+                    ],
+                    // 所有 sku 的组合列表，比如红色、M 码为一个 sku 组合，红色、S 码为另一个组合
+                    list: listData,
+                    price: price, // 默认价格（单位元）
+                    stock_num: 200, // 商品总库存
+                    // collection_id: 2261, // 无规格商品 skuId 取 collection_id，否则取所选 sku 组合对应的 id
+                    none_sku: false, // 是否无规格商品
+                    hide_stock: false // 是否隐藏剩余库存
                 }
             } else return {}
         },
         // 是否登陆
         isLogin () {
-            return !!getUserData()
+            return !!AV.User.current()
         },
         isTestAccount () {
             return getUserData().nickName === '19965412404'
@@ -229,24 +182,33 @@ export default {
     },
     async created () {
         await this.getDetails()
-        // console.log(this.details)
     },
-    mounted () {
+    async mounted () {
     },
     methods: {
         onChange (index) {
             this.current = index
         },
         async getDetails () {
-            const details = await getGoodsDetail(this.id)
+                    //    console.log(this.userId)
+            const Details = AV.Object.createWithoutData('ProductList', this.id)
+            const details = await Details.fetch()
+            // console.log(details)
+            // const details = await getGoodsDetail(this.id)
             // details.price = details.price
             let img = new Image()
             img.onload = () => {
-                this.imgSrc = details.imgSrcArray[0]
+                this.imgSrc = details.attributes.thumbnail
                 img = null
             }
-            img.src = details.imgSrcArray[0]
-            this.details = details
+            img.src = details.attributes.thumbnail
+            this.details = { 
+                ...details.attributes,
+                id: this.id
+            }
+            this.$nextTick(() => {
+                this.setHtml()
+            })
         },
         onClickIcon () {
             this.$toast('即刻开通超级会员，即刻享受专属客服')
@@ -254,25 +216,22 @@ export default {
                 this.$router.push('/member')
             }, 1.5 * 1000)
         },
-        async onAddCart (val) {
-            console.log(val)
+        onAddCart () {
             if (this.isLogin) {
-                await addCart({
-                    userId: getUserData().userId,
-                    goodsId: this.details.id,
-                    number: val.selectedNum
-                })
+                addCart(this.details)
                 this.$toast('加入购物车成功')
             } else this.$router.push('/login')
         },
         async onBuy (val) {
             if (this.isLogin) {
-                const cartId = await fastadd({
-                    userId: getUserData().userId,
-                    goodsId: this.details.id,
-                    number: val.selectedNum
-                })
-                this.$router.push(`/order-Detail?cartId=${cartId}`)
+                // const cartId = await fastadd({
+                //     userId: getUserData().userId,
+                //     goodsId: this.details.id,
+                //     number: val.selectedNum
+                // })
+                // this.$router.push(`/order-Detail?cartId=${cartId}`)
+                let orderId = addOrder([{ buyCount: 1, bookId: this.id, commodity: this.details }])
+                this.$router.push(`/order-Detail/${orderId}`)
             } else this.$router.push('/login')
         },
         spike () {
@@ -283,17 +242,27 @@ export default {
                     this.$router.push('/member')
                 }, 1500)
             }
+        },
+        setHtml () {
+            const html = this.$refs.html
+            const clientWidth = document.body.clientWidth
+            const nub = 750 / clientWidth
+            html.style.width = nub * 100 + '%'
+            html.style.transform = `scale(${1 / nub})`
         }
     }
 }
 </script>
 <style lang="scss">
 #goods-details {
-    .html {
+    #html {
         width: 100%;
         overflow: hidden;
+        transform-origin: 0px 0px;
+        // transform: scale(0.5);
         img {
             max-width: 100%!important;
+            width: 100%;
         }
     }
     .van-nav-bar .van-icon {
@@ -319,10 +288,10 @@ export default {
     }
     .banner {
         width: 100%;
-        height: 620px;
+        height: 800px;
         .img {
             width: 100%;
-            height: 620px;
+            height: 800px;
         }
         .custom-indicator {
             position: absolute;
@@ -370,6 +339,7 @@ export default {
         }
     }
     .details {
+        height: 0px;
         background: #fff;
         .title {
             margin: 20px 0 0;
@@ -379,6 +349,7 @@ export default {
             font-size: 32px;
             letter-spacing: 2px;
             color: #121314;
+            background: #fff;
         }
     }
     .member-box {

@@ -1,7 +1,7 @@
 <template>
     <div id="message-list">
         <van-nav-bar class="nav" :border="false" fixed left-arrow placeholder @click-left="$router.go(-1)" title="消息中心"/>
-        <Tabs color="#faa641" animated>
+        <Tabs color="#313635" animated>
             <Tab title="系统消息">
                 <empty
                     class="custom-image"

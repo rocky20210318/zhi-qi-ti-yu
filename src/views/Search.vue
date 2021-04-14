@@ -10,16 +10,16 @@
                 <dropdown-item title="筛选" ref="item">
                     <van-cell center title="包邮">
                         <template #right-icon>
-                            <van-switch v-model="switch1" size="24" active-color="#faa641" />
+                            <van-switch v-model="switch1" size="24" active-color="#313635" />
                         </template>
                     </van-cell>
                     <van-cell center title="折扣">
                         <template #right-icon>
-                            <van-switch v-model="switch2" size="24" active-color="#faa641" />
+                            <van-switch v-model="switch2" size="24" active-color="#313635" />
                         </template>
                     </van-cell>
                     <div style="padding: 5px 16px;">
-                        <Button color="#faa641" type="danger" block round @click="onConfirm">
+                        <Button color="#313635" type="danger" block round @click="onConfirm">
                         确认
                         </Button>
                     </div>
@@ -91,14 +91,14 @@ export default {
         background: transparent;
     }
     .van-dropdown-menu__title {
-        color: #fff;
+        // color: #fff;
     }
 }
 </style>
 <style lang="scss" scoped>
 #search {
     .nav {
-        background: linear-gradient(90deg,#fcd755,#faa641);
+        background: linear-gradient(90deg,#fcd755 0%,#d81e06 100%);
         .icon {
             margin-left: 20px;
         }
@@ -108,7 +108,7 @@ export default {
         }
     }
     .dropdown {
-        background: linear-gradient(90deg,#fcd755,#faa641)
+        // background: linear-gradient(90deg,#fcd755 0%,#d81e06 100%)
     }
     .goods-list {
         margin: 24px;

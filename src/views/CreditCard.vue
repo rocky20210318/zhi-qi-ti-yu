@@ -44,7 +44,7 @@
                 label="安全码"
                 type="number"
             />
-            <Button size="large" color="linear-gradient(180deg,#fcd755 0%,#faa641 100%)" class="button">绑定信用卡</Button>
+            <Button size="large" color="linear-gradient(180deg,#fcd755 0%,#d81e06 100%)" class="button">绑定信用卡</Button>
         </Form>
         <Popup v-model="show" position="bottom" class="">
             <datetime-picker

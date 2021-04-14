@@ -19,8 +19,8 @@ if (isPC && document.documentElement.clientWidth > 450) {
     document.body.appendChild(ifrm)
 } else {
     AV.init({
-        appId: 'EHKPcYGO06gIzS6uoxHtPltQ-MdYXbMMI',
-        appKey: 'N6nsVk6x2axf2MD2thDcoJbn'
+        appId: 'kyuoVAgoNNiOkE83VYz8ofeG-MdYXbMMI',
+        appKey: 'J54NYzlqo6h8GDhGD0FzaAwo'
         // serverURLs: 'https://aliasapi.luckms.com'
     })
 

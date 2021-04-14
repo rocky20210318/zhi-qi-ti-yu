@@ -40,7 +40,7 @@
                     <p class="text">专属客服</p>
             </grid-item>
         </grid>
-        <div class="button"><Button size="large" color="#faa641" @click="isShowPayMethod = true" class="">188元即刻开通</Button></div>
+        <div class="button"><Button size="large" color="#313635" @click="isShowPayMethod = true" class="">188元即刻开通</Button></div>
         <div v-show="isShowPayMethod" class="payMethod" @click="isShowPayMethod = false">
             <ul class="payList">
                 <!-- <li><p class="">支付宝信支付正在接入中</p></li> -->

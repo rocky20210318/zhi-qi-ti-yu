@@ -7,11 +7,11 @@
                 </template>
                 <span>首页</span>
             </tabbar-item>
-            <tabbar-item to="/spike-lits">
+            <tabbar-item to="/type-list">
                 <template #icon="props">
                     <img class="icon-img" :src="props.active ? require('../../assets/icon-home-tab-2-active.png') : require('../../assets/icon-home-tab-2.png')" />
                 </template>
-                <span>秒杀</span>
+                <span>分类</span>
             </tabbar-item>
             <tabbar-item to="/cart">
                 <template #icon="props">
@@ -61,7 +61,7 @@ export default {
     }
     .van-tabbar-item--active {
         .van-tabbar-item__text {
-            color: #faa641;
+            color: #313635;
         }
     }
 }

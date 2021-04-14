@@ -1,11 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-// import AV from 'leancloud-storage'
+import AV from 'leancloud-storage'
 // import { Toast } from 'vant'
 
 const authFilter = (to, from, next) => {
-    const UserData = JSON.parse(localStorage.getItem('UserData')) || null
-    if (UserData) {
+    if (AV.User.current()) {
         next()
     } else {
         next({
@@ -28,6 +27,11 @@ const routes = [
         path: '/search',
         name: 'Search',
         component: () => import('../views/Search.vue')
+    },
+    {
+        path: '/type-list',
+        name: 'TypeList',
+        component: () => import('../views/TypeList.vue')
     },
     {
         path: '/member',
@@ -68,7 +72,7 @@ const routes = [
         beforeEnter: authFilter
     },
     {
-        path: '/order-detail',
+        path: '/order-detail/:id',
         name: 'OrderDetail',
         component: () => import('../views/OrderDetail.vue'),
         beforeEnter: authFilter
@@ -131,6 +135,11 @@ const routes = [
         path: '/login',
         name: 'Login',
         component: () => import('../views/Login.vue')
+    },
+    {
+        path: '/password-reset',
+        name: 'PasswordReset',
+        component: () => import('../views/PasswordReset.vue')
     },
     {
         path: '/sign-up',

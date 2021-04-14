@@ -1,12 +1,13 @@
 <template>
     <div>
         <van-icon v-show="!isCollect" name="star-o" class="star" @click="addCollection" />
-        <van-icon v-show="isCollect" name="star" color="#faa641" class="star" @click="deleteCollection" />
+        <van-icon v-show="isCollect" name="star" class="star" color="linear-gradient(to right,#ff6034,#ee0a24)" @click="deleteCollection" />
     </div>
 </template>
 
 <script>
-import { collectList, couponAddorDelete, getUserData } from '../../services/index'
+import { addCollection, deleteCollection, ifCollection } from '../../services/index'
+import AV from 'leancloud-storage'
 
 export default {
     name: 'chat-list',
@@ -16,6 +17,10 @@ export default {
             default () {
                 return {}
             }
+        },
+        id: {
+            type: String,
+            default: ''
         }
 
     },
@@ -25,31 +30,27 @@ export default {
         }
     },
     computed: {
-        username () {
-            return getUserData()
-        }
     },
-    watch: {
-        'details.id' () {
-            this.getCollect()
-        }
+    created () {
+        this.getCollect()
     },
     methods: {
-        async getCollect () {
+        getCollect () {
             console.log(this.details)
-            if (this.username && await collectList(this.details.id)) this.isCollect = true
+            if (AV.User.current() && ifCollection(this.id)) this.isCollect = true
             else this.isCollect = false
         },
-        async addCollection () {
-            if (this.username) {
-                await couponAddorDelete(this.details.id)
+        addCollection () {
+            // console.log(this.details)
+            if (AV.User.current()) {
+                addCollection({ ...this.details })
                 this.getCollect()
             } else {
                 this.$router.push('/login')
             }
         },
-        async deleteCollection () {
-            await couponAddorDelete(this.details.id)
+        deleteCollection () {
+            deleteCollection({ ...this.details })
             this.getCollect()
         }
     }
@@ -58,6 +59,8 @@ export default {
 
 <style scoped lang="scss">
 .star {
-  width: 45px;
+    position: relative;
+    top: 5px;
+    line-height: 1;
 }
 </style>

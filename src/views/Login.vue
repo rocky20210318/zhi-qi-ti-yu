@@ -1,58 +1,58 @@
 <template>
     <div id="login">
-        <van-nav-bar
-            class="nav"
-            :border="false"
-            @click-left="$router.history.go(-1)"
-            fixed
-            left-arrow
-        />
-        <div class="top-bg">
-            <p class="h1">登陆</p>
-            <!-- <p class="text">欢迎您的到来</p> -->
-            <!-- <div class="bg"><img src="../assets/login-bg.png" alt=""></div> -->
-        </div>
-        <div class="from">
-            <div>
-                <field
-                    placeholder="请输入手机号码"
-                    type="tel"
-                    v-model="phoneNumber"
-                    clearable
-                    class="input"
-                />
+        <div class="firStep">
+            <van-nav-bar
+                :border="false"
+                @click-left="$router.history.go(-1)"
+                placeholder
+                left-arrow
+            />
+            <div class="content">
+                <h1>登陆</h1>
+                <div class="content-inner">
+                    <div class="label-input">
+                        <label class="label">账号</label>
+                        <field
+                            placeholder="请输入手机号码"
+                            type="tel"
+                            v-model="phoneNumber"
+                            clearable
+                        />
+                    </div>
+                    <div class="label-input">
+                        <label class="label">密码</label>
+                        <Field
+                            :type="inputTypeCon"
+                            placeholder="输入8-16位英文与字母构成的密码"
+                            v-model="valuePwd"
+                        />
+                    </div>
+                    <router-link to="/password-reset" class="forgotPwd">忘记密码?</router-link>
+                </div>
+                <Button color="#30b9c3"
+                    :disabled="!(phoneTest && valuePwd)"
+                    @click="submitButton"
+                    :loading="loginLoading"
+                    loading-text="登陆中"
+                    block
+                    type="primary"
+                    class="button">登陆</Button>
+                <van-row type="flex" align="center" justify="center" class="tipsBox">
+                    <checkbox v-model="checked" checked-color="#30b9c3" icon-size="0.38rem" class="checkbox" />
+                    <p>我已阅读并同意<router-link class="privacy" to="/privacy">《隐私政策》</router-link>与<router-link class="privacy" to="/agreement">《用户协议》</router-link></p>
+                </van-row>
+                <p class="switchPage"><router-link to="/sign-up">没有账号去注册</router-link></p>
             </div>
-            <div>
-                <field
-                    placeholder="请输入密码"
-                    type="password"
-                    v-model="valuePwd"
-                    clearable
-                    class="input"
-                />
-            </div>
-            <div class="sign-up"><router-link to="/sign-up">没有账号？</router-link></div>
-            <Button color="#faa641"
-                @click="submitButton"
-                :loading="loginLoading"
-                loading-text="登陆中"
-                block
-                type="primary"
-                class="button">登陆</Button>
-            <van-row type="flex" align="center" justify="center" class="tipsBox">
-                <checkbox v-model="checked" checked-color="#faa641" icon-size="0.38rem" class="checkbox" />
-                <p>我已阅读并同意<router-link class="privacy" to="/privacy">《隐私政策》</router-link>与<router-link class="privacy" to="/agreement">《用户协议》</router-link></p>
-            </van-row>
         </div>
     </div>
 </template>
 
 <script>
 import { Button, Field, Checkbox } from 'vant'
-import { login } from '../services'
+import AV from 'leancloud-storage'
 
 export default {
-    name: 'login',
+    name: 'Login',
     components: {
         Button,
         Field,
@@ -61,115 +61,123 @@ export default {
     data () {
         return {
             phoneNumber: '',
-            valuePwd: '',
+            eyeCon: true,
             loginLoading: false,
+            valuePwd: '',
             checked: false
         }
     },
     computed: {
-    },
-    async created () {
+        phoneTest () {
+            const PHONE_EXP = /^(((13[0-9])|(14[5-7])|(15[0-9])|(16[0-9])|(17[0-9])|(18[0-9])|(19[0-9]))+\d{8})$/
+            const { phoneNumber } = this
+            if (!PHONE_EXP.test(phoneNumber)) {
+                return false
+            } else return true
+        },
+        inputTypeCon () {
+            return this.eyeCon ? 'password' : 'text'
+        }
     },
     mounted () {
     },
     methods: {
         async submitButton () {
+            const password = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/
             if (!this.checked) {
-                this.$toast('请阅读并同意《用户协议》与《隐私政策》')
+                this.$toast('请阅读并同意《隐私政策》与《用户协议》')
                 return false
             }
-            try {
+            if (password.test(this.valuePwd)) {
                 this.loginLoading = true
-                // await callApi(signUpOrlogInWithMobilePhone, this.username, this.code)
-                await login({
-                    username: this.phoneNumber,
-                    password: this.valuePwd
+                await AV.User.logInWithMobilePhone(this.phoneNumber, this.valuePwd).then(() => {
+                    this.$toast('登陆成功，稍后自动跳转')
+                    setTimeout(() => {
+                        this.$router.push('/my')
+                    }, 2 * 1000)
+                }, () => {
+                    this.$toast('网络异常请稍后重试')
                 })
-                this.$toast('登录成功')
-                this.$router.replace('/home')
-            } catch (e) {
-                this.$toast(e.message)
-            } finally {
                 this.loginLoading = false
-            }
+            } else this.$toast('密码格式为8-16位包含字母及数字')
         }
     }
 }
 </script>
 <style lang="scss">
 #login {
+    .van-nav-bar {
+        background: rgba(0,0,0,0);
+    }
     .van-nav-bar .van-icon {
         color: #fff;
     }
+     .label-input .van-cell {
+        padding: 25px;
+        background-color: #f5f5f5;
+        border-radius: 10px;
+        input {
+            font-size: 28px;
+        }
+    }
 }
 </style>
-<style lang="scss" scoped>
-#login {
-    min-height: 100%;
-    background: url('../assets/login-bg.png')no-repeat;
+<style scoped lang="scss">
+#login{
+    height: 100%;
+    background: url('../assets/login-bg.jpg') no-repeat;
     background-size: 100% 100%;
-    background-color: linear-gradient(45deg, #fbd454 0%, #fcc24e 33%, #fbcc50 68%, #faa942 100%);
-    padding: 0 40px;
-    .nav {
-        background: rgb(0, 0, 0, 0);
-    }
-    .top-bg {
-        position: relative;
-        z-index: 2;
-        height: 300px;
-        margin-right: -40px;
-        padding-bottom: 80px;
-        .bg {
-            position: absolute;
-            top: 0;
-            right: 0;
-            z-index: -1;
-            img {
-                height: 545px;
-            }
-        }
-        .h1 {
-            padding: 185px 0 37px;
-            font-size: 64px;
-            font-size: 800;
-            letter-spacing: 1px;
-            color: #fff;
-        }
-        .text {
-            font-size: 60px;
-            font-weight: 500;
-            color: #001f42;
-        }
-    }
-    .from {
-        background: #fff;
-        box-shadow: 0px 40px 40px 0px rgba(0, 0, 0, 0.08);
-        border-radius: 26px;
-        overflow: hidden;
-        padding: 80px 66px 150px;
-        .input {
-            border-bottom: solid 2px #d5d5d5;
-        }
-    }
-    .button {
-        margin: 150px 0px 30px;
-        // box-sizing: border-box;
-    }
-    .tipsBox {
-        p {
-            margin-left: 10px;
-            font-size: 24px;
-            color: #808080;
-        }
-        a {
-            color: #001f42;
-        }
-    }
-    .sign-up {
-        margin-top: 15px;
-        text-align: right;
+    // padding-left: 20px;
+    // padding-right: 20px;
+}
+.content {
+    margin: 240px 47px 100px;
+    background-color: #ffffff;
+    box-shadow: 0px 20px 20px 0pxrgba(0, 0, 0, 0.08);
+    border-radius: 13px;
+    padding: 37px 65px;
+}
+h1 {
+    margin-bottom: 90px;
+    font-size: 44px;
+    color: #262628;
+}
+.label-input {
+    margin-bottom: 24px;
+    .label {
+        display: block;
+        margin-bottom: 20px;
         font-size: 28px;
-        color: #001f42;
+        letter-spacing: 1px;
+        color: #9b9b9b;
     }
+}
+.forgotPwd {
+    margin: -10px 0 20px;
+    display: block;
+    text-align: right;
+    font-size: 24px;
+    color: #666;
+}
+.button {
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.15);
+    border-radius: 32px;
+}
+
+.tipsBox {
+    margin: 40px 0;
+    font-size: 24px;
+    color: #909090;
+    .checkbox {
+        margin-right: 5px;
+    }
+    a {
+        color: #4990e2;
+    }
+}
+.switchPage {
+    font-size: 28px;
+    color: #666;
+    text-align: center;
 }
 </style>

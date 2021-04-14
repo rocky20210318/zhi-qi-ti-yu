@@ -1,17 +1,17 @@
 <template>
     <div id="my">
         <div class="user-data">
-            <p class="title">我的<router-link to="/set"><van-icon class="setting" color="#fff" size="0.6rem" name="setting" /></router-link></p>
+            <p class="title">我的</p>
             <van-row type="flex" align="center">
                 <div><img class="user-img" src="../assets/user-category-avatar.png" alt=""></div>
-                <router-link v-if="!username" class="user-name" to="/login">登陆/注册</router-link>
+                <router-link v-if="!userData.username" class="user-name" to="/login">登陆/注册</router-link>
                 <template v-else>
                     <div>
-                        <p class="user-name">{{ username }}</p>
+                        <p class="user-name">{{ userData.username }}</p>
                         <div class="vip">
-                            VIP
-                            <van-icon color="#eee" size="16px" name="fire" class="icon" />
-                            <Button size="mini" color=" linear-gradient(180deg, #fcd755 0%, #faa641 100%)" class="button" to="member">立即开通</Button>
+                            <!-- VIP
+                            <van-icon color="#eee" size="16px" name="fire" class="icon" /> -->
+                            <!-- <Button size="mini" color="linear-gradient(180deg,#fcd755 0%,#d81e06 100%)" class="button" to="member">点击编辑</Button> -->
                         </div>
                     </div>
                     <!-- <router-link to="/edit-user"><van-icon class="edit" size="24px" name="edit" /></router-link> -->
@@ -42,7 +42,7 @@
                 </router-link>
             </van-row>
         </div>
-        <div class="banner"><router-link to="/member"><img src="../assets/my-banner.jpg" alt=""></router-link></div>
+        <div class="banner"><router-link to="/member"><img src="../assets/my-banner.jpeg" alt=""></router-link></div>
         <div class="features">
             <p class="title">其他服务</p>
             <grid class="grid" :border="false">
@@ -50,14 +50,14 @@
                     <div><img src="../assets/ic_notification@2x.png" alt=""></div>
                     <p class="text">通知</p>
                 </grid-item>
-                <grid-item class="item" to="/address-list">
+                <grid-item class="item" to="/address-list?switchable=false">
                     <div><img src="../assets/ic_location.png" alt=""></div>
                     <p class="text">地址管理</p>
                 </grid-item>
-                <grid-item class="item" to="/pay-list">
+                <!-- <grid-item class="item" to="/pay-list">
                     <div><img src="../assets/ic_wallet.png" alt=""></div>
                     <p class="text">支付</p>
-                </grid-item>
+                </grid-item> -->
                 <grid-item class="item" to="/collect">
                     <div><img src="../assets/ic_heart@2x.png" alt=""></div>
                     <p class="text">收藏</p>
@@ -66,10 +66,10 @@
                     <div><img src="../assets/Shape.png" alt=""></div>
                     <p class="text">反馈</p>
                 </grid-item>
-                <!-- <grid-item class="item" @click="logOut">
-                    <div><img src="../assets/ic_logout copy@2x.png" alt=""></div>
-                    <p class="text">退出登陆</p>
-                </grid-item> -->
+                <grid-item class="item" to="/set">
+                    <div><img src="../assets/set.png" alt=""></div>
+                    <p class="text">设置</p>
+                </grid-item>
             </grid>
         </div>
         <!-- <p class="privacy-agreement">点击查看用<router-link to="/agreement">《用户协议》</router-link>及<router-link to="/privacy">《隐私协议》</router-link></p> -->
@@ -79,7 +79,8 @@
 
 <script>
 import { Grid, GridItem, Button } from 'vant'
-import { getUserData, logOut } from '../services'
+import { logOut } from '../services'
+import AV from 'leancloud-storage'
 
 export default {
     name: 'my',
@@ -90,20 +91,33 @@ export default {
     },
     data () {
         return {
+            userId: AV.User.current().id,
+            userData: {
+                username: '',
+                remarks: '',
+            }
         }
     },
     computed: {
-        username () {
-            const UserData = getUserData()
-            return UserData.nickName
-        }
     },
     async created () {
-        // await getUserData()
+        await this.getUserData()
     },
     mounted () {
     },
     methods: {
+        async getUserData () {
+            console.log(this.userId)
+            const User = AV.Object.createWithoutData('_User', this.userId)
+            await User.fetch().then(data => {
+                this.userData = {
+                    username: data.get('username') || data.get('mobilePhoneNumber'),
+                    remarks: data.get('remarks'),
+                    userImage: data.get('userImage'),
+                }
+                console.log(this.userData)
+            })
+        },
         logOut () {
             this.$toast('已退出登陆')
             logOut()
@@ -145,7 +159,7 @@ export default {
         .user-img {
             width: 120px;
             height: 120px;
-            padding: 20px;
+            // padding: 20px;
             margin-right: 32px;
             box-sizing: border-box  ;
             background: #fff;
@@ -171,7 +185,7 @@ export default {
             }
         }
         .button {
-            margin-left: 30px;
+            // margin-left: 30px;
         }
         // .edit {
         // }
@@ -197,13 +211,14 @@ export default {
             top: 3px;
         }
         .img {
+            margin-top: 20px;
             // height: 48px;
             // line-height: 48px;
             text-align: center;
             // margin-bottom: 20px;
         }
         img {
-            max-width: 100px;
+            max-width: 75px;
             // min-height: 48px;
             vertical-align: middle;
         }
@@ -235,9 +250,9 @@ export default {
         }
         .item {
             img {
-                max-width: 36px;
-                max-height: 36px;
-                margin-bottom: 14px;
+                max-width: 50px;
+                // max-height: 36px;
+                margin-bottom: 10px;
             }
             .text {
                 font-size: 24px;

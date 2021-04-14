@@ -216,7 +216,7 @@ export default {
         span {
             margin: 0 3px;
             font-size: 44px;
-            color: #faa641;
+            color: #313635;
             line-height: 1;
         }
     }
@@ -249,7 +249,7 @@ export default {
         width: 163px;
         height: 54px;
         // margin-top: 10px;
-        background-color: #faa641;
+        background-color: #313635;
         border-radius: 8px;
         font-size: 26px;
         color: #fff;

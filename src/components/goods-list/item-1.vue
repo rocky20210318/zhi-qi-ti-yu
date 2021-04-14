@@ -7,7 +7,7 @@
             <p class="original-price">￥{{ Math.floor(details.price / 0.9) }}</p>
             <div>
                 <!-- <tag type="primary" plain>限时包邮</tag> -->
-                <tag type="primary" color="#faa641" plain>特惠9折</tag>
+                <tag type="primary" color="#313635" plain>特惠9折</tag>
             </div>
         </van-row>
     </router-link>
@@ -64,7 +64,7 @@ export default {
     .Price {
         font-size: 30px;
         line-height: 1;
-        color: #faa641;
+        color: #313635;
         span {
             font-size: 24px
         }

@@ -9,28 +9,29 @@
             <tab title="待评价"/>
         </tabs>
         <div v-if="orderList.length">
-            <div v-for="data in orderList" :key="data.id" class="order-item">
+            <div v-for="data in orderList" :key="data.orderId" class="order-item">
                 <van-row type="flex" justify="space-between" align="center" class="text">
-                    <span>订单号：{{ data.orderSn }}</span>
-                    <span>{{ data.orderStatusText }}</span>
+                    <span>订单号：{{ data.orderId }}</span>
+                    <!-- <span>{{ data.orderStatusText }}</span> -->
                 </van-row>
                 <book-large-list
                     class="list"
                     :can-handle="false"
                 >
                     <book-large-list-item
-                        v-for="item in data.goodsList"
+                        v-for="item in data.books"
                         :key="item.id"
                         :data="item"
                         :order-id="item.id"
+                        :status='data.status'
                         class="item"
-                        @click.native="handleItemClick(item)"
+                        @click.native="handleItemClick(data)"
                     />
                 </book-large-list>
                 <van-row type="flex" justify="space-between" align="center" class="book-detail">
-                    <div>
+                    <!-- <div>
                         <Button
-                            v-if="isShowCancelOrder(data.orderstatus)"
+                            v-if="isShowCancelOrder(data.status)"
                             type="primary"
                             radius
                             class="pay"
@@ -38,21 +39,21 @@
                         >
                             付款
                         </Button>
-                    </div>
+                    </div> -->
                     <div>
                         <Button
-                            v-if="isShowCancelOrder(data.orderstatus)"
+                            v-if="isShowCancelOrder(data.status)"
                             type="primary"
                             radius
                             class="remove-order"
-                            @click="showOrderDelete(data.id)"
+                            @click="showOrderDelete(data.orderId)"
                         >
                             取消订单
                         </Button>
                     </div>
                     <div>
                         <Button
-                            v-if="isShowRefundOrder(data.orderstatus)"
+                            v-if="isShowRefundOrder(data.status)"
                             type="primary"
                             radius
                             class="remove-order"
@@ -112,20 +113,21 @@ export default {
             await this.getOrderList()
         },
         isShowCancelOrder (nub) {
-            const nubArray = [101]
+            const nubArray = [0]
             return nubArray.indexOf(nub) !== -1
         },
         isShowRefundOrder (nub) {
-            const nubArray = [201, 301]
+            const nubArray = [1]
             return nubArray.indexOf(nub) !== -1
         },
         handleItemClick (item) {
+            // console.log(item)
             if (item.status === 0) {
-                this.$router.push('/orderDetail')
+                this.$router.push('/order-detail/' + item.orderId)
             }
         },
         async orderRefund (orderId) {
-            await orderRefund(orderId)
+            // await orderRefund(orderId)
             this.$toast('申请已提交')
             this.getOrderList()
         },
@@ -136,6 +138,7 @@ export default {
         },
         async getOrderList () {
             const data = await getOrderList(this.showType)
+            // console.log(data)
             this.orderList = data
         },
         showOrderDelete (orderId) {
@@ -195,7 +198,7 @@ export default {
         }
         .item {
             border: 1px solid #eee;
-            background: #fffbf5;
+            background: #f7f7f7;
         }
     }
     .payMethod {

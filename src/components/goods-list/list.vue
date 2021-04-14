@@ -17,7 +17,8 @@
 <script>
 import { List, PullRefresh } from 'vant'
 import item from './item-1'
-import { getGoodsByKeys } from '../../services'
+// import { getGoodsByKeys } from '../../services'
+import AV from 'leancloud-storage'
 
 export default {
     name: 'product-list',
@@ -73,13 +74,25 @@ export default {
                 return false
             }
             this.pageIndex++
-            const listData = await getGoodsByKeys({
-                page: this.pageIndex,
-                limit: this.pageSize,
-                keyword: this.keys,
-                israndom: this.israndom,
-                ...this.params
-            })
+            // const articleList = new AV.Query('ProductList')
+            // articleList.skip(this.pageIndex)
+            // articleList.limit(this.pageSize)
+            // articleList.contains('title', this.keys)
+            // // console.log(index, size)
+            // // articleList.descending('likeNumber')
+            // // articleList.addDescending('readNumber')
+            // let listData = await articleList.find()
+            // listData = listData.map(item => {
+            //     return { ...item.attributes }
+            // })
+            // // const listData = await getGoodsByKeys({
+            // //     page: this.pageIndex,
+            // //     limit: this.pageSize,
+            // //     keyword: this.keys,
+            // //     israndom: this.israndom,
+            // //     ...this.params
+            // // })
+            let listData = await this.getList(this.pageIndex, this.pageSize)
             if (listData.length === 0) this.finished = true
             else {
                 this.listData = this.listData.concat(listData)
@@ -90,19 +103,26 @@ export default {
         async onRefresh () {
             this.pageIndex = 1
             this.finished = false
-            const listData = await getGoodsByKeys({
-                page: this.pageIndex,
-                limit: this.pageSize,
-                keyword: this.keys,
-                israndom: this.israndom,
-                ...this.params
-            })
+            let listData = await this.getList(this.pageIndex, this.pageSize)
             this.listData = []
             this.listData = listData
             // this.$forceUpdate()
             if (listData.length === 0) this.finished = true
-            console.log(this.listData, listData)
+            // console.log(this.listData, listData)
             this.isRefreshLoading = false
+        },
+        async getList(index, size) {
+            const articleList = new AV.Query('ProductList')
+            articleList.skip((index - 1) * size)
+            articleList.limit(size)
+            articleList.contains('title', this.keys)
+            let listData = await articleList.find()
+            return listData = listData.map(item => {
+                return {
+                    ...item.attributes,
+                    id: item.id
+                }
+            })
         }
     }
 }

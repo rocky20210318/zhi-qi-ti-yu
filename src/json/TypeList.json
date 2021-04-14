@@ -1,0 +1,176 @@
+[
+    {
+        "title": "冲锋衣裤",
+        "typeId": 1,
+        "keys": "冲锋衣裤",
+        "imgSrc": ""
+    },
+    {
+        "title": "软壳衣裤",
+        "typeId": 1,
+        "keys": "软壳衣裤",
+        "imgSrc": ""
+    },
+    {
+        "title": "抓绒衣裤",
+        "typeId": 1,
+        "keys": "抓绒衣裤",
+        "imgSrc": ""
+    },
+    {
+        "title": "套装",
+        "typeId": 1,
+        "keys": "套装",
+        "imgSrc": ""
+    },
+    {
+        "title": "健身服",
+        "typeId": 1,
+        "keys": "健身服",
+        "imgSrc": ""
+    },
+    {
+        "title": "跑步鞋",
+        "typeId": 2,
+        "keys": "跑步鞋",
+        "imgSrc": ""
+    },
+    {
+        "title": "篮球鞋",
+        "typeId": 2,
+        "keys": "篮球鞋",
+        "imgSrc": ""
+    },
+    {
+        "title": "足球鞋",
+        "typeId": 2,
+        "keys": "足球鞋",
+        "imgSrc": ""
+    },
+    {
+        "title": "训练鞋",
+        "typeId": 2,
+        "keys": "训练鞋",
+        "imgSrc": ""
+    },
+    {
+        "title": "运动包",
+        "typeId": 3,
+        "keys": "运动包",
+        "imgSrc": ""
+    },
+    {
+        "title": "羽毛球拍",
+        "typeId": 3,
+        "keys": "羽毛球拍",
+        "imgSrc": ""
+    },
+    {
+        "title": "乒乓球拍",
+        "typeId": 3,
+        "keys": "乒乓球拍",
+        "imgSrc": ""
+    },
+    {
+        "title": "网球拍",
+        "typeId": 3,
+        "keys": "网球拍",
+        "imgSrc": ""
+    },
+    {
+        "title": "篮球",
+        "typeId": 3,
+        "keys": "篮球",
+        "imgSrc": ""
+    },
+    {
+        "title": "足球",
+        "typeId": 3,
+        "keys": "足球",
+        "imgSrc": ""
+    },
+    {
+        "title": "高尔夫球",
+        "typeId": 3,
+        "keys": "高尔夫球",
+        "imgSrc": ""
+    },
+    {
+        "title": "跑步机",
+        "typeId": 4,
+        "keys": "跑步机",
+        "imgSrc": ""
+    },
+    {
+        "title": "划船机",
+        "typeId": 4,
+        "keys": "划船机",
+        "imgSrc": ""
+    },
+    {
+        "title": "跑步机",
+        "typeId": 4,
+        "keys": "跑步机",
+        "imgSrc": ""
+    },
+    {
+        "title": "仰卧板",
+        "typeId": 4,
+        "keys": "仰卧板",
+        "imgSrc": ""
+    },
+    {
+        "title": "动感单",
+        "typeId": 4,
+        "keys": "动感单",
+        "imgSrc": ""
+    },
+    {
+        "title": "车椭圆机",
+        "typeId": 4,
+        "keys": "车椭圆机",
+        "imgSrc": ""
+    },
+    {
+        "title": "综合训练器",
+        "typeId": 4,
+        "keys": "综合训练器",
+        "imgSrc": ""
+    },
+    {
+        "title": "健身车",
+        "typeId": 4,
+        "keys": "健身车",
+        "imgSrc": ""
+    },
+    {
+        "title": "哑铃甩",
+        "typeId": 4,
+        "keys": "哑铃甩",
+        "imgSrc": ""
+    },
+    {
+        "title": "脂机跳绳",
+        "typeId": 4,
+        "keys": "脂机跳绳",
+        "imgSrc": ""
+    },
+    {
+        "title": "单双杠",
+        "typeId": 4,
+        "keys": "单双杠",
+        "imgSrc": ""
+    },
+    {
+        "title": "健腹轮",
+        "typeId": 4,
+        "keys": "健腹轮",
+        "imgSrc": ""
+    },
+    {
+        "title": "踏步机",
+        "typeId": 4,
+        "keys": "踏步机",
+        "imgSrc": ""
+    }
+]

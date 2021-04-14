@@ -18,7 +18,7 @@
 <script>
 import { AddressEdit } from 'vant'
 import areaList from '../json/area'
-import { saveAddress, getAddressDetails, deleteDddress } from '../services'
+import { saveAddress, getAddressDetails, deleteDddress, updateAddress } from '../services'
 
 export default {
     name: 'address-details',
@@ -37,6 +37,7 @@ export default {
     },
     async created () {
         if (this.id) this.addressInfo = await getAddressDetails(this.id)
+        console.log(this.addressInfo)
     },
     mounted () {
     },
@@ -44,10 +45,12 @@ export default {
         async onSave (val) {
             // console.log(val)
             try {
-                await saveAddress({
-                    id: this.id,
-                    ...val
-                })
+                if (this.id) await updateAddress(this.id, { ...val })
+                else {
+                    await saveAddress({
+                        ...val
+                    })
+                }
                 this.$toast('保存收货地址成功')
                 setTimeout(() => {
                     this.$router.history.go(-1)
@@ -56,9 +59,9 @@ export default {
                 this.$toast(e.message)
             }
         },
-        onDelete () {
+        async onDelete () {
             try {
-                deleteDddress(this.id)
+                await deleteDddress(this.id)
                 this.$toast('已删除地址')
                 setTimeout(() => {
                     this.$router.history.go(-1)
@@ -66,7 +69,6 @@ export default {
             } catch (e) {
                 this.$toast(e.message)
             }
-            deleteDddress(this.id)
         }
     }
 }
@@ -75,11 +77,11 @@ export default {
 #address {
     // height: 100%;
     .van-button--danger {
-        background: #faa641;
-        border-color: #faa641;
+        background: #313635;
+        border-color: #313635;
     }
     .van-switch--on {
-        background: linear-gradient(180deg,#fcd755 0%,#faa641 100%);
+        background: linear-gradient(180deg,#fcd755 0%,#d81e06 100%);
     }
 }
 </style>

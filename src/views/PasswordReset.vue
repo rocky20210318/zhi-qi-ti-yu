@@ -1,5 +1,5 @@
 <template>
-    <div id="sign-up">
+    <div id="login">
         <div class="firStep">
             <van-nav-bar
                 :border="false"
@@ -8,7 +8,7 @@
                 left-arrow
             />
             <div class="content">
-                <h1>注册</h1>
+                <h1>重制密码</h1>
                 <div class="content-inner">
                     <div class="label-input">
                         <label class="label">账号</label>
@@ -20,36 +20,52 @@
                         />
                     </div>
                     <div class="label-input">
-                        <label class="label">密码</label>
+                        <label class="label">验证码</label>
+                        <field
+                            type="tel"
+                            placeholder="请输入验证码"
+                            v-model="smsCode"
+                            clearable
+                        >
+                            <template #button>
+                                <Button
+                                    :loading="smsCodeLoading"
+                                    :disabled="startCountdown"
+                                    loading-text="发送中"
+                                    @click="getSmsCode"
+                                    color="#30b9c3"
+                                    size="small"
+                                    type="primary"
+                                >
+                                    <template v-if="!startCountdown">获取验证码</template>
+                                    <template v-else><count-down class="count-down" :time="60 * 1000" @finish="startCountdown = false" format='ss秒重新获取' /></template>
+                                </Button>
+                            </template>
+                        </field>
+                    </div>
+                    <div class="label-input">
+                        <label class="label">新密码密码</label>
                         <Field
                             :type="inputTypeCon"
                             placeholder="输入8-16位英文与字母构成的密码"
                             v-model="valuePwd"
                         />
                     </div>
-                    <div class="label-input">
-                        <label class="label">重复密码</label>
-                        <Field
-                            :type="inputTypeCon"
-                            placeholder="输入8-16位英文与字母构成的密码"
-                            v-model="valuePwdTow"
-                        />
-                    </div>
                 </div>
-                <Button color="#30b9c3"
+                <Button
+                    color="#30b9c3"
                     :disabled="!(phoneTest && valuePwd)"
                     @click="submitButton"
                     :loading="loginLoading"
                     loading-text="登陆中"
                     block
                     type="primary"
-                    class="button">注册</Button>
+                    class="button">重制密码</Button>
                 <!-- <p class="tipsBox">登录/注册表示同意<span class="privacy">《用户服务协议》</span></p> -->
                 <van-row type="flex" align="center" justify="center" class="tipsBox">
                     <checkbox v-model="checked" checked-color="#30b9c3" icon-size="0.38rem" class="checkbox" />
                     <p>我已阅读并同意<router-link class="privacy" to="/privacy">《隐私政策》</router-link>与<router-link class="privacy" to="/agreement">《用户协议》</router-link></p>
                 </van-row>
-                <p class="switchPage"><router-link to="/login">去登陆</router-link></p>
             </div>
         </div>
     </div>
@@ -69,11 +85,13 @@ export default {
     data () {
         return {
             phoneNumber: '',
+            smsCode: '',
             eyeCon: true,
+            smsCodeLoading: false,
             loginLoading: false,
+            startCountdown: false,
             valuePwd: '',
-            valuePwdTow: '',
-            checked: false
+            checked: true
         }
     },
     computed: {
@@ -91,34 +109,33 @@ export default {
     mounted () {
     },
     methods: {
-        async submitButton () {
-            const password = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/
-            if (!this.checked) {
-                this.$toast('请阅读并同意《隐私政策》与《用户协议》')
+        async getSmsCode () {
+            if (!this.phoneTest) {
+                this.$toast('手机号码格式不正确')
                 return false
             }
+            this.smsCodeLoading = true
+            await AV.User.requestPasswordResetBySmsCode(this.phoneNumber)
+            this.smsCodeLoading = false
+            this.startCountdown = true
+            this.$toast('短信验证码已发送')
+        },
+        async submitButton () {
+            const password = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/
             if (password.test(this.valuePwd)) {
                 this.loginLoading = true
-                const user = new AV.User()
-                user.setUsername(this.phoneNumber)
-                user.setPassword(this.valuePwd)
-                user.setMobilePhoneNumber(this.phoneNumber)
-                await user.signUp().then(() => {
-                    this.$toast('注册成功，稍后自动跳转')
-                    setTimeout(() => {
-                        this.$router.push('/my')
-                    }, 2 * 1000)
-                }, (e) => {
-                    this.$toast('网络异常请稍后重试')
-                })
-                this.loginLoading = false
+                await AV.User.resetPasswordBySmsCode(this.smsCode, this.valuePwd)
+                this.$toast('登陆成功，稍后自动跳转')
+                setTimeout(() => {
+                    this.$router.push('/my')
+                }, 2 * 1000)
             } else this.$toast('请输入8-16位密码，需包含字母及数字')
         }
     }
 }
 </script>
 <style lang="scss">
-#sign-up {
+#login {
     .van-nav-bar {
         background: rgba(0,0,0,0);
     }
@@ -136,7 +153,7 @@ export default {
 }
 </style>
 <style scoped lang="scss">
-#sign-up{
+#login{
     height: 100%;
     background: url('../assets/login-bg.jpg') no-repeat;
     background-size: 100% 100%;
@@ -187,10 +204,5 @@ h1 {
     a {
         color: #4990e2;
     }
-}
-.switchPage {
-    font-size: 28px;
-    color: #666;
-    text-align: center;
 }
 </style>

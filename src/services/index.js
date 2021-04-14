@@ -4,32 +4,33 @@ const apiPrefix = 'http://47.106.209.243:18081'
 const PHONE_EXP = /^(((13[0-9])|(14[5-7])|(15[0-9])|(17[0-9])|(18[0-9])|(19[0-9]))+\d{8})$/
 const PASSWORD_EXP = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
 let UserData = JSON.parse(localStorage.getItem('UserData')) || null
+import AV from 'leancloud-storage'
 
 /**
  * 执行service函数
  * @param api {Promise} - api函数
  * @returns {Promise<T | void>}
  */
-// export default function callApi (api, ...parameters) {
-//     return api(...parameters).then((response) => {
-//         if (response instanceof Array) {
-//             if (!response) {
-//                 return []
-//             }
-//             return response.map((object) => object.toJSON())
-//         } else {
-//             if (!response) {
-//                 return {}
-//             }
-//             if (!(response instanceof AV.Object)) {
-//                 return response
-//             }
-//             return response.toJSON()
-//         }
-//     }).catch((error) => {
-//         throw error.message.replace(/\[.*\]/g, '')
-//     })
-// }
+export default function callApi (api, ...parameters) {
+    return api(...parameters).then((response) => {
+        if (response instanceof Array) {
+            if (!response) {
+                return []
+            }
+            return response.map((object) => object.toJSON())
+        } else {
+            if (!response) {
+                return {}
+            }
+            if (!(response instanceof AV.Object)) {
+                return response
+            }
+            return response.toJSON()
+        }
+    }).catch((error) => {
+        throw error.message.replace(/\[.*\]/g, '')
+    })
+}
 
 /**
  * 注册
@@ -197,12 +198,20 @@ export async function getAddressList () {
  * 获取收获地址详情
  * @returns {Promise<User>}
  */
+// export async function getAddressDetails (id) {
+//     const userData = getUserData()
+//     const userId = userData.userId
+//     const response = await request(`${apiPrefix}/wx/address/detail?userId=${userId}&id=${id}`)
+//     const data = response.data
+//     return data
+// }
 export async function getAddressDetails (id) {
-    const userData = getUserData()
-    const userId = userData.userId
-    const response = await request(`${apiPrefix}/wx/address/detail?userId=${userId}&id=${id}`)
-    const data = response.data
-    return data
+    const address = new AV.Query('AddressList')
+    address.equalTo('objectId', id)
+    const response = await address.first()
+    return {
+        ...response.attributes
+    }
 }
 
 /**
@@ -218,27 +227,72 @@ export async function getAddressDefault () {
  * 获取添加/更新地址
  * @returns {Promise<User>}
  */
+// export async function saveAddress (query) {
+//     const userData = getUserData()
+//     const userId = userData.userId
+//     const response = await request(`${apiPrefix}/wx/address/save?userId=${userId}`, {
+//         method: 'POST',
+//         body: { ...query }
+//     })
+//     return response.data
+// }
 export async function saveAddress (query) {
-    const userData = getUserData()
-    const userId = userData.userId
-    const response = await request(`${apiPrefix}/wx/address/save?userId=${userId}`, {
-        method: 'POST',
-        body: { ...query }
-    })
-    return response.data
+    console.log(query)
+    const Address = AV.Object.extend('AddressList')
+    const address = new Address()
+    const currentUser = AV.User.current()
+    query.user = currentUser
+    for(let key in query) {
+        // console.log(key, query[key])
+        address.set(key, query[key])
+    }
+    await address.save()
+}
+
+/**
+ * 更新地址
+ * @returns {Promise<User>}
+ */
+export async function updateAddress (objectId, query) {
+    // console.log(query)
+    const Address = AV.Object.createWithoutData('AddressList', objectId)
+    for(let key in query) {
+        // console.log(key, query[key])
+        Address.set(key, query[key])
+    }
+    await Address.save()
 }
 
 /**
  * 删除地址
  * @returns {Promise<User>}
  */
-export async function deleteDddress (id) {
-    const userData = getUserData()
-    const userId = userData.userId
-    const response = await request(`${apiPrefix}/wx/address/delete?userId=${userId}&id=${id}`, {
-        method: 'POST'
+export async function deleteDddress (objectId) {
+    const Address = AV.Object.createWithoutData('AddressList', objectId)
+    await Address.destroy()
+    // const userData = getUserData()
+    // const userId = userData.userId
+    // const response = await request(`${apiPrefix}/wx/address/delete?userId=${userId}&id=${id}`, {
+    //     method: 'POST'
+    // })
+    // return response.data
+}
+
+/**
+ * 获取当前用户收货地址
+ * @returns {Promise<*>}
+ */
+export async function getAddress () {
+    const address = new AV.Query('AddressList')
+    const currentUser = AV.User.current()
+    address.equalTo('user', currentUser)
+    let response = await address.find()
+    return response.map(i => {
+        return {
+            ...i.attributes,
+            id: i.id
+        }
     })
-    return response.data
 }
 
 /**
@@ -339,15 +393,15 @@ export async function couponAddorDelete (valueId) {
  * 添加购物车
  * @return Array<cart>
  */
-export async function addCart (query) {
-    const response = await request(`${apiPrefix}/wx/cart/add?${queryString.stringify(query)}`, { method: 'POST' })
-    if (response.errno === 0) {
-        return response.data
-    } else {
-        const error = { code: -1, message: response.errmsg }
-        throw error
-    }
-}
+// export async function addCart (query) {
+//     const response = await request(`${apiPrefix}/wx/cart/add?${queryString.stringify(query)}`, { method: 'POST' })
+//     if (response.errno === 0) {
+//         return response.data
+//     } else {
+//         const error = { code: -1, message: response.errmsg }
+//         throw error
+//     }
+// }
 
 /**
  *立刻购买购物车
@@ -366,32 +420,32 @@ export async function fastadd (query) {
  * 获取购物车列表/单个
  * @returns {Promise<User>}
  */
-export async function getCart (id) {
-    const userData = getUserData()
-    const userId = userData.userId
-    const response = await request(`${apiPrefix}/wx/cart/index?userId=${userId}`)
-    const listData = response.data.cartList
-    for (let i = 0; i < listData.length; i++) {
-        // console.log(i)
-        const item = listData[i]
-        const data = {
-            title: item.goodsName,
-            link: '',
-            price: item.price,
-            comment: '',
-            imgSrcArray: [item.picUrl],
-            thumbnail: item.picUrl,
-            id: item.id,
-            details: '',
-            buyCount: item.number,
-            checked: item.checked,
-            goodsId: item.goodsId
-        }
-        listData[i] = data
-    }
-    if (id) return listData.filter((item) => String(item.id) === id)
-    else return listData
-}
+// export async function getCart (id) {
+//     const userData = getUserData()
+//     const userId = userData.userId
+//     const response = await request(`${apiPrefix}/wx/cart/index?userId=${userId}`)
+//     const listData = response.data.cartList
+//     for (let i = 0; i < listData.length; i++) {
+//         // console.log(i)
+//         const item = listData[i]
+//         const data = {
+//             title: item.goodsName,
+//             link: '',
+//             price: item.price,
+//             comment: '',
+//             imgSrcArray: [item.picUrl],
+//             thumbnail: item.picUrl,
+//             id: item.id,
+//             details: '',
+//             buyCount: item.number,
+//             checked: item.checked,
+//             goodsId: item.goodsId
+//         }
+//         listData[i] = data
+//     }
+//     if (id) return listData.filter((item) => String(item.id) === id)
+//     else return listData
+// }
 
 /**
  * 提交订单
@@ -464,13 +518,18 @@ export async function couponSelectlist (cartId) {
  * 取消订单
  * @returns {Promise<User>}
  */
+// export async function orderDelete (orderId) {
+//     const userData = getUserData()
+//     const userId = userData.userId
+//     const response = await request(`${apiPrefix}/wx/order/cancel?userId=${userId}&orderId=${orderId}`, {
+//         method: 'POST'
+//     })
+//     return response.data
+// }
 export async function orderDelete (orderId) {
-    const userData = getUserData()
-    const userId = userData.userId
-    const response = await request(`${apiPrefix}/wx/order/cancel?userId=${userId}&orderId=${orderId}`, {
-        method: 'POST'
-    })
-    return response.data
+    let listData = getOrderList(0)
+    listData = listData.filter(i => i.orderId !== orderId)
+    localStorage.setItem('order-record', JSON.stringify(listData))
 }
 /**
  * 申请退款
@@ -489,39 +548,39 @@ export async function orderRefund (query) {
  * 获取订单
  * @returns {Promise<User>}
  */
-export async function getOrderList (showType) {
-    const userData = getUserData()
-    const userId = userData.userId
-    const params = {
-        page: 1,
-        limit: 30
-    }
-    const response = await request(`${apiPrefix}/wx/order/list?userId=${userId}&showType=${showType}&${queryString.stringify(params)}`, {
-        method: 'GET'
-    })
-    const listData = response.data.list
-    for (const i in listData) {
-        const item = listData[i]
-        for (const j in item.goodsList) {
-            const data = item.goodsList[j]
-            item.goodsList[j] = {
-                title: data.goodsName,
-                price: data.price,
-                imgSrcArray: [data.picUrl],
-                thumbnail: data.picUrl,
-                id: data.id + item.orderSn,
-                buyCount: data.number,
-                checked: data.checked,
-                goodsId: data.id,
-                orderSn: item.orderSn,
-                orderStatusText: item.orderStatusText,
-                orderstatus: item.orderstatus
-            }
-        }
-    }
-    // console.log(listData)
-    return listData
-}
+// export async function getOrderList (showType) {
+//     const userData = getUserData()
+//     const userId = userData.userId
+//     const params = {
+//         page: 1,
+//         limit: 30
+//     }
+//     const response = await request(`${apiPrefix}/wx/order/list?userId=${userId}&showType=${showType}&${queryString.stringify(params)}`, {
+//         method: 'GET'
+//     })
+//     const listData = response.data.list
+//     for (const i in listData) {
+//         const item = listData[i]
+//         for (const j in item.goodsList) {
+//             const data = item.goodsList[j]
+//             item.goodsList[j] = {
+//                 title: data.goodsName,
+//                 price: data.price,
+//                 imgSrcArray: [data.picUrl],
+//                 thumbnail: data.picUrl,
+//                 id: data.id + item.orderSn,
+//                 buyCount: data.number,
+//                 checked: data.checked,
+//                 goodsId: data.id,
+//                 orderSn: item.orderSn,
+//                 orderStatusText: item.orderStatusText,
+//                 orderstatus: item.orderstatus
+//             }
+//         }
+//     }
+//     // console.log(listData)
+//     return listData
+// }
 
 /**
  * 登陆IP记录
@@ -531,4 +590,203 @@ export async function addLogindata (data) {
     // console.log(data)
     const response = await request(`http://47.56.217.76/:80/logindata/add?${queryString.stringify(data)}`)
     return response.data
+}
+
+/**
+ * 添加收藏
+ * @returns {Promise<this>}
+ */
+export function addCollection (data) {
+    const currentUser = AV.User.current().id
+    const collection = JSON.parse(localStorage.getItem(`collection-${currentUser}`)) || []
+    collection.push(data)
+    localStorage.setItem(`collection-${currentUser}`, JSON.stringify(collection))
+}
+
+/**
+ * 删除收藏
+ * @returns {Promise<this>}
+ */
+export function deleteCollection (data) {
+    const currentUser = AV.User.current().id
+    const collection = JSON.parse(localStorage.getItem(`collection-${currentUser}`)) || []
+    const index = collection.findIndex((item) => item.id === data.id)
+    collection.splice(index, 1)
+    localStorage.setItem(`collection-${currentUser}`, JSON.stringify(collection))
+}
+
+/**
+ * 获取收藏
+ * @returns {Promise<this>}
+ */
+export function getCollectionList () {
+    const currentUser = AV.User.current().id
+    return JSON.parse(localStorage.getItem(`collection-${currentUser}`)) || []
+}
+
+/**
+ * 判断是否收藏收藏
+ * @returns {Promise<this>}
+ */
+export function ifCollection (id) {
+    console.log(id)
+    const currentUser = AV.User.current().id
+    const collection = JSON.parse(localStorage.getItem(`collection-${currentUser}`)) || []
+    const index = collection.findIndex((item) => item.id === id)
+    // console.log(index !== -1)
+    return index !== -1
+}
+/**
+ * 添加购物车
+ * @return Array<cart>
+ */
+export function addCart (details) {
+    console.log(details.id)
+    let cart = JSON.parse(window.localStorage.getItem('cart-record')) || []
+    // let commodity = getCommodityDetails(category, type, id)
+    let isExistIndex = cart.findIndex((item) => item.commodity.id === details.id)
+    if (isExistIndex === -1) {
+        cart.push({
+            cartId: cart.length + 1,
+            commodity: details
+        })
+    }
+    window.localStorage.setItem('cart-record', JSON.stringify(cart))
+}
+/**
+ * 添加订单
+ * @param array[{buyCount, bookId}] 图书Id以及购买量的列表
+ * @return orderId
+ */
+export function addOrder (array) {
+    let order = JSON.parse(window.localStorage.getItem('order-record')) || []
+    let orderId = getOrderId()
+    let books = []
+    array.forEach((item) => {
+        // let currentBook = item.commodity
+        let buyCount = item.buyCount
+        books.push({
+            buyCount,
+            commodity: item.commodity
+        })
+    })
+    order.unshift({
+        orderId,
+        status: 0, // 付款标识
+        books
+    })
+    window.localStorage.setItem('order-record', JSON.stringify(order))
+    return orderId
+}
+
+export function getOrderId () {
+    let orderId = ''
+    for (let i = 0; i < 10; i++) {
+        orderId += Math.floor(Math.random() * 10)
+    }
+    orderId = new Date().getTime() + orderId
+    return orderId
+}
+
+/**
+ * 获取购物车
+ * @return Array<cart>
+ */
+export function getCart () {
+    return JSON.parse(window.localStorage.getItem('cart-record')) || []
+}
+
+/**
+ * 删除购物车项
+ * @param bookId
+ */
+export function removeCartItem (cartId) {
+    let cart = JSON.parse(window.localStorage.getItem('cart-record')) || []
+    let index = cart.findIndex((item) => item.cartId === cartId)
+    if (index !== -1) {
+        cart.splice(index, 1)
+    }
+    window.localStorage.setItem('cart-record', JSON.stringify(cart))
+}
+
+/**
+ * 获取订单
+ * @return Array<Order>
+ */
+export function getOrder (id) {
+    if (id) {
+        let orders = JSON.parse(window.localStorage.getItem('order-record')) || []
+        return orders.find((item) => String(item.orderId) === String(id))
+    } else {
+        return JSON.parse(window.localStorage.getItem('order-record')) || []
+    }
+}
+
+export async function updateAddressBooks (id, bookNames) {
+    const address = AV.Object.createWithoutData('address', id)
+    address.set('booknames', bookNames)
+    return address.save()
+}
+
+export function ConfirmOrder (id) {
+    let orders = JSON.parse(window.localStorage.getItem('order-record')) || []
+    let index = orders.findIndex((item) => String(item.orderId) === String(id))
+    orders.splice(index, 1, {
+        ...orders[index],
+        status: 1
+    })
+    window.localStorage.setItem('order-record', JSON.stringify(orders))
+}
+
+export function getOrderList (status) {
+    status--
+    let data = getOrder()
+    // console.log(status)
+    // console.log(getOrder())
+    if (status !== -1) data = data.filter(i => i.status === status)
+    // getOrder().forEach((i) => {
+    //     // console.log(i)
+    //     if (status === undefined) data.push(i)
+    //     else if (i.status === status) data.push(i)
+    //     // i.books.forEach((b) => {
+    //     //     if (status === undefined) data.push({ orderId: i.orderId, status: i.status, book: b })
+    //     //     else if (i.status === status) data.push({ orderId: i.orderId, status: i.status, book: b })
+    //     // })
+    // })
+    return data
+}
+
+// 执行组合排列的函数
+export function doExchange(array){
+    var len = array.length
+    // 当数组大于等于2个的时候
+    if(len >= 2){
+        // 第一个数组的长度
+        var len1 = array[0].length
+        // 第二个数组的长度
+        var len2 = array[1].length
+        // 2个数组产生的组合数
+        var lenBoth = len1 * len2
+        //  申明一个新数组,做数据暂存
+        var items = new Array(lenBoth)
+        // 申明新数组的索引
+        var index = 0
+        // 2层嵌套循环,将组合放到新数组中
+        for(var i=0; i<len1; i++){
+            for(var j=0; j<len2; j++){
+                items[index] = [array[0][i], array[1][j]]
+                index++;
+            }
+        }
+        // 将新组合的数组并到原数组中
+        var newArr = new Array(len -1)
+        for(var i=2; i < array.length; i++){
+            newArr[i-1] = array[i]
+        }
+        newArr[0] = items
+        // 执行回调
+        return doExchange(newArr)
+    }else{
+        return array[0]
+    }
 }
