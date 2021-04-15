@@ -47,7 +47,7 @@ export default {
             articleList.equalTo('typeId', this.activeKey + 1)
             // articleList.skip(1)
             // articleList.limit(100)
-            let typeList = await articleList.find()
+            const typeList = await articleList.find()
             this.typeList = typeList.map(item => {
                 return { ...item.attributes }
             })

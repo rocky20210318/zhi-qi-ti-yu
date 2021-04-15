@@ -1,8 +1,5 @@
 <template>
-    <li
-        v-if="isRemove && data.commodity"
-        class="book-large-list-item"
-    >
+    <li v-if="isRemove && data.commodity" class="book-large-list-item">
         <van-row
             v-if="$parent.canHandle"
             type="flex"
@@ -23,18 +20,40 @@
         >
             {{ status === 0 ? '待付款' : '待发货' }}
         </div>
-        <van-row type="flex" justify="space-between" align="center" class="book-detail">
+        <van-row
+            type="flex"
+            justify="space-between"
+            align="center"
+            class="book-detail"
+        >
             <!-- <img :src="data.commodity.thumbnail"> -->
-            <van-image lazy-load fit="cover" :src="data.commodity.thumbnail" class="img" />
+            <van-image
+                lazy-load
+                fit="cover"
+                :src="data.commodity.thumbnail"
+                class="img"
+            />
             <!-- <div>
                 <h5>{{ data.commodity.title }}</h5>
                 <span v-if="!$parent.canHandle">x{{ data.buyCount }}</span>
             </div> -->
             <div class="right">
-                <h5 class="van-multi-ellipsis--l2">{{ data.commodity.title }}</h5>
+                <h5 class="van-multi-ellipsis--l2">
+                    {{ data.commodity.title }}
+                </h5>
                 <van-row type="flex" justify="space-between" align="center">
                     <!-- <span v-if="$parent.canHandle" class="label">下单后抽奖</span> -->
-                    <van-row type="flex" justify="space-between" align="center" class="price-nub"><span class="price">¥{{ data.commodity.price.toFixed(2) }}</span><span v-if="!$parent.canHandle" class="nub">x{{ data.buyCount }}</span></van-row>
+                    <van-row
+                        type="flex"
+                        justify="space-between"
+                        align="center"
+                        class="price-nub"
+                        ><span class="price"
+                            >¥{{ data.commodity.price.toFixed(2) }}</span
+                        ><span v-if="!$parent.canHandle" class="nub"
+                            >x{{ data.buyCount }}</span
+                        ></van-row
+                    >
                     <span>
                         <number-input
                             v-if="$parent.canHandle"
@@ -50,21 +69,16 @@
                 </van-row>
             </div>
         </van-row>
-        <van-row
-            align="center"
-            justify="between"
-        >
-        </van-row>
+        <van-row align="center" justify="between"> </van-row>
     </li>
 </template>
 
 <script>
 import NumberInput from '../../components/number-input'
-import { Button } from 'vant'
 
 export default {
     name: 'item',
-    components: { NumberInput, Button },
+    components: { NumberInput },
     props: {
         data: {
             type: Object,
@@ -127,96 +141,96 @@ export default {
     background: #fff;
     border-radius: 20px;
     margin-bottom: 30px;
-  .order-status {
-    font-size: 14px * 2;
-    color: #ea6932;
-    text-align: right;
-    margin-bottom: 20px;
-  }
-  .operators {
-    .checkbox {
-      width: 16px * 2;
-      height: 16px * 2;
-      border: solid 2px #d3d3d3;
-      border-radius: 50%;
-      box-sizing: border-box;
-      &.is-checked {
-        background: #d0021b;
-        border: none;
-        text-align: center;
-        &:after {
-          content: "";
-          display: inline-block;
-          width: 5px;
-          height: 16px;
-          border-color: #fff;
-          border-style: solid;
-          border-width: 0 3px 3px 0;
-          transform: rotate(45deg);
+    .order-status {
+        font-size: 14px * 2;
+        color: #ea6932;
+        text-align: right;
+        margin-bottom: 20px;
+    }
+    .operators {
+        .checkbox {
+            width: 16px * 2;
+            height: 16px * 2;
+            border: solid 2px #d3d3d3;
+            border-radius: 50%;
+            box-sizing: border-box;
+            &.is-checked {
+                background: #d0021b;
+                border: none;
+                text-align: center;
+                &:after {
+                    content: '';
+                    display: inline-block;
+                    width: 5px;
+                    height: 16px;
+                    border-color: #fff;
+                    border-style: solid;
+                    border-width: 0 3px 3px 0;
+                    transform: rotate(45deg);
+                }
+            }
         }
-      }
+        .remove {
+            width: 32px;
+            height: 34px;
+            background-size: 100%;
+        }
+        margin-bottom: 20px;
     }
-    .remove {
-      width: 32px;
-      height: 34px;
-      background-size: 100%;
+    .book-detail {
+        .img {
+            width: 220px;
+            height: 220px;
+            margin-right: 32px;
+            border-radius: 22px;
+            overflow: hidden;
+        }
+        h5 {
+            flex: 0;
+            font-size: 28px;
+            line-height: 1.33;
+            color: #2a2a2a;
+            // overflow: hidden;
+            // height: 90px;
+            margin-bottom: 50px;
+            font-weight: 500;
+        }
+        .right {
+            flex: 1;
+        }
+        span {
+            display: block;
+            text-align: right;
+        }
+        .author {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .desc {
+            word-break: break-all;
+            height: 75px;
+            margin-bottom: 15px;
+            line-height: 1.86;
+            overflow: hidden;
+            margin-top: 24px;
+            color: #666666;
+            span {
+                display: inline-block;
+                margin-right: 5px;
+                padding: 2px 15px;
+                border: 1.5px solid #ffd300;
+                border-radius: 20px;
+                font-size: 24px;
+                color: #ffd300;
+                line-height: 1.5;
+            }
+        }
     }
-    margin-bottom: 20px;
-  }
-  .book-detail {
-    .img {
-        width: 220px;
-        height: 220px;
-        margin-right: 32px;
-        border-radius: 22px;
-        overflow: hidden;
-    }
-    h5 {
-        flex: 0;
-        font-size: 28px;
-        line-height: 1.33;
-        color: #2A2A2A;
-        // overflow: hidden;
-        // height: 90px;
-        margin-bottom: 50px;
-        font-weight: 500;
-    }
-    .right {
-        flex: 1;
-    }
-    span {
-      display: block;
-      text-align: right;
-    }
-    .author {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .desc {
-      word-break: break-all;
-      height: 75px;
-      margin-bottom: 15px;
-      line-height: 1.86;
-      overflow: hidden;
-      margin-top: 24px;
-      color: #666666;
-      span {
-        display: inline-block;
-        margin-right: 5px;
-        padding: 2px 15px;
-        border: 1.5px solid #ffd300;
-        border-radius: 20px;
-        font-size: 24px;
-        color: #ffd300;
-        line-height: 1.5;
-      }
-    }
-  }
 }
 .amount {
-  font-size: 20px * 2;
-  font-weight: 500;
-  color: #d0021b;
+    font-size: 20px * 2;
+    font-weight: 500;
+    color: #d0021b;
 }
 </style>

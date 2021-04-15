@@ -2,34 +2,8 @@
     <div>
         <van-nav-bar fixed left-arrow @click-left="$router.go(-1)" placeholder title="订单确认" />
         <div class="content">
-            <!-- <div class="address-wrap">
-                <van-row
-                    align="center"
-                    @click.native="addressClick"
-                >
-                    <img
-                        src="../assets/address.png"
-                        class="location-img"
-                    >
-                    <div
-                        v-if="addressInfo"
-                        class="information"
-                    >
-                        <div>
-                            <span class="name">{{ addressInfo.fullname }}</span>
-                            <span class="phone">{{ addressInfo.phone }}</span>
-                        </div>
-                        <div class="address">{{ addressInfo.address }}</div>
-                    </div>
-                    <span v-else>点击填写收货地址</span>
-                </van-row>
-            </div> -->
             <div class="address-wrap">
                     <van-row type="flex" justify="space-between" align="center" @click.native="addressClick">
-                        <!-- <img
-                            src="../assets/address.png"
-                            class="location-img"
-                        > -->
                         <van-icon name="map-marked" size="38" class="location-img" color="#313635" />
                         <div v-if="addressInfo" class="information" >
                             <div>
@@ -50,10 +24,6 @@
                             <img :src="item.commodity.thumbnail">
                             <div>
                                 <h5 class="van-multi-ellipsis--l2">{{ item.commodity.title }}</h5>
-                                <!-- <p
-                                    class="desc"
-                                    v-html="item.mediaSale.mediaList[0].descs"
-                                /> -->
                                 <van-row type="flex" justify="space-between" align="center">
                                     <p class="amount">¥{{ item.commodity.price }}</p>
                                     <span v-if="!$parent.canHandle">x{{ item.buyCount }}</span>
@@ -65,6 +35,11 @@
                         </van-row>
                     </li>
             </ul>
+            <div class="address-wrap">
+                <div class="information coupon">
+                    <div >暂无可使用优惠券</div>
+                </div>
+            </div>
         </div>
         <footer>
             <van-row type="flex" justify="space-between" align="center" class="footer-wrap">
@@ -95,13 +70,13 @@
 </template>
 
 <script>
-import { getOrder, getAddress, updateAddressBooks, ConfirmOrder } from '../services'
+import { getOrder, getAddress } from '../services'
 import { Dialog } from 'vant'
 
 export default {
     name: 'Order-Detail',
     components: {
-        [Dialog.Component.name]: Dialog.Component,
+        [Dialog.Component.name]: Dialog.Component
     },
     data () {
         return {
@@ -112,7 +87,7 @@ export default {
     },
     computed: {
         data () {
-            let orderId = this.$route.params.id
+            const orderId = this.$route.params.id
             // console.log(getOrder(orderId).books)
             return getOrder(orderId).books
         },
@@ -133,13 +108,14 @@ export default {
     methods: {
         handleBuy () {
             if (this.addressInfo) {
-                ConfirmOrder(this.$route.params.id)
-                let bookNames = this.data.map((item) => item.commodity.title).join(',')
-                updateAddressBooks(this.addressInfo.objectId, bookNames)
-                this.isModal = true
-                setTimeout(() => {
-                    this.$router.replace('/order-list?status=2')
-                }, 2000)
+                // ConfirmOrder(this.$route.params.id)
+                // let bookNames = this.data.map((item) => item.commodity.title).join(',')
+                // updateAddressBooks(this.addressInfo.objectId, bookNames)
+                // this.isModal = true
+                // setTimeout(() => {
+                //     this.$router.replace('/order-list?status=2')
+                // }, 2000)
+                this.$router.push('/credit-card')
             } else {
                 this.$toast('请填写收货地址')
             }
@@ -271,11 +247,11 @@ $footer-height: 58px * 2;
     width: 124px * 2;
     height: 41px * 2;
     line-height: 41px * 2;
-    background: linear-gradient(180deg,#fcd755 0%,#d81e06 100%);
+    background: linear-gradient(45deg,#fcd755 0%,#d81e06 100%);
     color: #fff;
     font-size: 18px * 2;
     text-align: center;
-    border-radius: 41px;
+    border-radius: 4px;
   }
 }
 .modal {

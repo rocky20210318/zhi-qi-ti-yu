@@ -15,7 +15,7 @@
         "leancloud-storage": "^4.6.1",
         "lib-flexible": "^0.3.2",
         "uglifyjs-webpack-plugin": "^2.2.0",
-        "vant": "^2.5.4",
+        "vant": "^2.12.13",
         "vue": "^2.6.11",
         "vue-router": "^3.1.5",
         "vuex": "^3.1.2"
@@ -44,8 +44,8 @@
     },
     "postcss": {
         "plugins": {
-        "autoprefixer": {},
-        "precss": {}
+            "autoprefixer": {},
+            "precss": {}
         }
     }
 }

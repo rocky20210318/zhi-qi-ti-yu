@@ -2,7 +2,7 @@
     <div v-if="isShow" id="privacy">
         <van-dialog v-model="isShow" title="个人信息保护指引" confirmButtonText="同意" cancelButtonText="不同意" show-cancel-button @confirm="confirm">
             <div class="text">
-                感谢您信任并使用易购一元拍！我们非常重视您的个人信息和隐私保护。<br/>
+                感谢您信任并使用正京体育！我们非常重视您的个人信息和隐私保护。<br/>
                 1、在浏览使用时，我们会收集、使用设备标识信息用于推荐。<br/>
                 2、我们可能会申请位置权限，用于帮助您确定收获地址。<br/>
                 3、我们可能会申请存储权限，用于发布下载图文及缓存相关内容。<br/>

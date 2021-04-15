@@ -1,15 +1,18 @@
 <template>
     <div id="home">
-        <div class=""><img src="../assets/home-1.jpg" alt=""></div>
-        <div class=""><img src="../assets/home-2.jpeg" alt=""></div>
-        <div class=""><img src="../assets/home-3.jpeg" alt=""></div>
+        <div id="imageMap-1">
+            <img src="../assets/home-1.jpg" alt="">
+            <router-link to="/coupon-list" class="itme-1" />
+        </div>
+        <div id="imageMap-2"><img src="../assets/home-2.jpeg" alt=""></div>
+        <div id="imageMap-3"><img src="../assets/home-3.jpeg" alt=""></div>
         <p v-if="caseNumber" class="record"><a href="https://beian.miit.gov.cn/">{{ caseNumber }}</a></p>
         <basic-footer />
     </div>
 </template>
 
 <script>
-import AV from 'leancloud-storage'
+// import AV from 'leancloud-storage'
 
 export default {
     name: 'home',
@@ -39,16 +42,16 @@ export default {
         }
     },
     async created () {
-        const articleList = new AV.Query('ProductList')
-        articleList.skip(1)
-        articleList.limit(10)
-        // console.log(index, size)
-        // articleList.descending('likeNumber')
-        // articleList.addDescending('readNumber')
-        let list = await articleList.find()
-        list = list.map(item => {
-            return { ...item.attributes }
-        })
+        // const articleList = new AV.Query('ProductList')
+        // articleList.skip(1)
+        // articleList.limit(10)
+        // // console.log(index, size)
+        // // articleList.descending('likeNumber')
+        // // articleList.addDescending('readNumber')
+        // let list = await articleList.find()
+        // list = list.map(item => {
+        //     return { ...item.attributes }
+        // })
     },
     mounted () {
     },
@@ -70,6 +73,16 @@ export default {
         font-size: 28px;
         color: #666;
         margin-bottom: 20px;
+    }
+    #imageMap-1 {
+        position: relative;
+        .itme-1 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
     }
 }
 </style>

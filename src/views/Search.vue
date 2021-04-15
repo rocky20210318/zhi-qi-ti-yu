@@ -6,32 +6,16 @@
                 <Search v-model="keys" show-action placeholder="请输入搜索关键词" class="search" @search="search" />
             </van-row>
             <dropdown-menu class="dropdown">
-                <dropdown-item v-model="value" :options="option" @change="sort" />
-                <dropdown-item title="筛选" ref="item">
-                    <van-cell center title="包邮">
-                        <template #right-icon>
-                            <van-switch v-model="switch1" size="24" active-color="#313635" />
-                        </template>
-                    </van-cell>
-                    <van-cell center title="折扣">
-                        <template #right-icon>
-                            <van-switch v-model="switch2" size="24" active-color="#313635" />
-                        </template>
-                    </van-cell>
-                    <div style="padding: 5px 16px;">
-                        <Button color="#313635" type="danger" block round @click="onConfirm">
-                        确认
-                        </Button>
-                    </div>
-                </dropdown-item>
+                <dropdown-item v-model="value" :options="option1" title="综合" @close="sort" />
+                <dropdown-item v-model="value" :options="option2" title="销量" @close="sort" ref="item" />
             </dropdown-menu>
         </sticky>
-        <goods-list ref="goodsList" :keys="keys" :params="params" class="goods-list"/>
+        <goods-list ref="goodsList" :keys="keys" :params="params" :query-fun="queryFun" class="goods-list"/>
     </div>
 </template>
 
 <script>
-import { Search, DropdownMenu, DropdownItem, Button, Sticky } from 'vant'
+import { Search, DropdownMenu, DropdownItem, Sticky } from 'vant'
 import GoodsList from '../components/goods-list'
 
 export default {
@@ -40,7 +24,6 @@ export default {
         Search,
         DropdownMenu,
         DropdownItem,
-        Button,
         GoodsList,
         Sticky
     },
@@ -51,25 +34,45 @@ export default {
             value: 0,
             switch1: false,
             switch2: false,
-            option: [
+            option1: [
                 { text: '综合', value: 0 },
-                { text: '新品推荐', value: 1 },
-                { text: '热卖爆款', value: 2 }
+                { text: '新品', value: 1 },
+                { text: '价格', value: 2 }
+            ],
+            option2: [
+                { text: '升序', value: 3 },
+                { text: '降序', value: 4 }
             ],
             params: {}
         }
     },
     computed: {
+        queryFun () {
+            let fun = (Fun) => {}
+            switch (this.value) {
+            case 0:
+                break
+            case 1:
+                fun = (Fun) => { Fun.descending('updatedAt') }
+                break
+            case 2:
+                fun = (Fun) => { Fun.ascending('price') }
+                break
+            case 3:
+                fun = (Fun) => { Fun.ascending('createdAt') }
+                break
+            case 4:
+                fun = (Fun) => { Fun.descending('createdAt') }
+                break
+            }
+            return fun
+        }
     },
     async created () {
     },
     mounted () {
     },
     methods: {
-        onConfirm () {
-            this.$refs.item.toggle(false)
-            this.search()
-        },
         sort () {
             this.params = {
                 keys: '时尚' + this.keys
@@ -88,7 +91,7 @@ export default {
         color: #fff;
     }
     .van-dropdown-menu__bar {
-        background: transparent;
+        background: #fff;
     }
     .van-dropdown-menu__title {
         // color: #fff;

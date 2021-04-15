@@ -1,5 +1,9 @@
 <template>
-    <pull-refresh v-model="isRefreshLoading" @refresh="onRefresh" class="product-list">
+    <pull-refresh
+        v-model="isRefreshLoading"
+        @refresh="onRefresh"
+        class="product-list"
+    >
         <list
             v-if="listData.length !== 0 || !finished"
             v-model="isLoading"
@@ -7,8 +11,18 @@
             finished-text="没有更多了"
             @load="onLoad"
         >
-            <van-row type="flex" justify="space-between" align="center" class="list">
-                <item v-for="item in listData" :key="item.id" :details="item" class="item" />
+            <van-row
+                type="flex"
+                justify="space-between"
+                align="center"
+                class="list"
+            >
+                <item
+                    v-for="item in listData"
+                    :key="item.id"
+                    :details="item"
+                    class="item"
+                />
             </van-row>
         </list>
     </pull-refresh>
@@ -41,6 +55,12 @@ export default {
         maxPageIndex: {
             type: Number,
             default: null
+        },
+        queryFun: {
+            type: Function,
+            default () {
+                return function () { }
+            }
         }
     },
     components: {
@@ -92,7 +112,7 @@ export default {
             // //     israndom: this.israndom,
             // //     ...this.params
             // // })
-            let listData = await this.getList(this.pageIndex, this.pageSize)
+            const listData = await this.getList(this.pageIndex, this.pageSize)
             if (listData.length === 0) this.finished = true
             else {
                 this.listData = this.listData.concat(listData)
@@ -103,7 +123,7 @@ export default {
         async onRefresh () {
             this.pageIndex = 1
             this.finished = false
-            let listData = await this.getList(this.pageIndex, this.pageSize)
+            const listData = await this.getList(this.pageIndex, this.pageSize)
             this.listData = []
             this.listData = listData
             // this.$forceUpdate()
@@ -111,17 +131,17 @@ export default {
             // console.log(this.listData, listData)
             this.isRefreshLoading = false
         },
-        async getList(index, size) {
+        async getList (index, size) {
             const articleList = new AV.Query('ProductList')
             articleList.skip((index - 1) * size)
             articleList.limit(size)
             articleList.contains('title', this.keys)
-            let listData = await articleList.find()
-            return listData = listData.map(item => {
-                return {
-                    ...item.attributes,
-                    id: item.id
-                }
+            this.queryFun(articleList)
+            // console.log(this.queryFun)
+            const listData = await articleList.find()
+            // return listData = listData.map(item => ({ ...item.attributes, id: item.id })
+            return listData.map(item => {
+                return { ...item.attributes, id: item.id }
             })
         }
     }

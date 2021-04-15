@@ -54,6 +54,11 @@ const routes = [
         component: () => import('../views/SpikeLits.vue')
     },
     {
+        path: '/coupon-list',
+        name: 'coupon-list',
+        component: () => import('../views/CouponList.vue')
+    },
+    {
         path: '/my',
         name: 'My',
         component: () => import('../views/My.vue'),

@@ -1,39 +1,88 @@
 <template>
     <div id="goods-details">
-        <van-nav-bar class="nav" :border="false" fixed left-arrow  @click-left="$router.go(-1)"/>
-        <swipe class="banner" indicator-color="white" :show-indicators="false" :autoplay="2500" @change="onChange">
-            <swipe-item v-if="details.thumbnail" ><van-image lazy-load :src="details.thumbnail" class="img" /></swipe-item>
+        <van-nav-bar
+            class="nav"
+            :border="false"
+            fixed
+            left-arrow
+            @click-left="$router.go(-1)"
+        />
+        <swipe
+            class="banner"
+            indicator-color="white"
+            :show-indicators="false"
+            :autoplay="2500"
+            @change="onChange"
+        >
+            <swipe-item v-if="details.thumbnail"
+                ><van-image lazy-load :src="details.thumbnail" class="img"
+            /></swipe-item>
         </swipe>
         <skeleton :loading="!details.title" class="skeleton" :row="2">
-            <van-row v-if="true" type="flex" justify="space-between" align="center" class="title-pire">
+            <van-row
+                v-if="true"
+                type="flex"
+                justify="space-between"
+                align="center"
+                class="title-pire"
+            >
                 <p class="title">{{ details.title }}</p>
                 <div class="pire">
-                    <p class="">￥{{ price || Math.floor(details.price ) || 0 }}</p>
-                    <p class="original-price">￥{{ Math.floor(details.price / 0.9) || 0}}</p>
+                    <p class="">
+                        ￥{{ price || Math.floor(details.price) || 0 }}
+                    </p>
+                    <p class="original-price">
+                        ￥{{ Math.floor(details.price / 0.9) || 0 }}
+                    </p>
                 </div>
             </van-row>
-            <van-row v-else van-row type="flex" justify="space-between" align="center" class="spike">
+            <van-row
+                v-else
+                van-row
+                type="flex"
+                justify="space-between"
+                align="center"
+                class="spike"
+            >
                 <div class="left">
                     <p class="pire">￥<span>1</span></p>
                     <p class="original-price">￥992</p>
                 </div>
                 <div class="right">
                     <p class="text">距离活动结束</p>
-                    <p class="time"><span>24</span>:<span>00</span>:<span>00</span></p>
+                    <p class="time">
+                        <span>24</span>:<span>00</span>:<span>00</span>
+                    </p>
                 </div>
             </van-row>
         </skeleton>
         <ul class="data">
             <skeleton :loading="!details.title" class="skeleton" :row="4">
                 <!-- <li class="item"><span class="lable">剩余</span>{{ details.price ? 3 : 400 }}件</li> -->
-                <li class="item" @click="isShowSku = true"><span class="lable">尺码</span><van-icon class="arrow" name="arrow" /></li>
-                <li class="item"><span class="lable">保障</span>付款2天内发货</li>
-                <li class="item"><span class="lable">活动</span>全场8折&nbsp;•&nbsp;限时包邮</li>
+                <li class="item" @click="isShowSku = true">
+                    <span class="lable">尺码</span
+                    ><van-icon class="arrow" name="arrow" />
+                </li>
+                <li class="item">
+                    <span class="lable">保障</span>付款2天内发货
+                </li>
+                <li class="item">
+                    <span class="lable">活动</span>全场8折&nbsp;•&nbsp;限时包邮
+                </li>
             </skeleton>
         </ul>
         <div class="member-box">
-            <div class="member"><router-link to="/member"><img src="../assets/my-banner.jpeg" alt=""></router-link></div>
-            <van-row type="flex" justify="space-between" align="center" class="tap">
+            <div class="member">
+                <router-link to="/member"
+                    ><img src="../assets/my-banner.jpeg" alt=""
+                /></router-link>
+            </div>
+            <van-row
+                type="flex"
+                justify="space-between"
+                align="center"
+                class="tap"
+            >
                 <p class="item">•&nbsp;全场8折</p>
                 <p class="item">•&nbsp;全场免邮</p>
                 <p class="item">•&nbsp;极速发货</p>
@@ -42,7 +91,12 @@
         </div>
         <div class="evaluation">
             <p class="title">商品评价(0)</p>
-            <skeleton :loading="!details.details" class="skeleton" avatar :row="3">
+            <skeleton
+                :loading="!details.details"
+                class="skeleton"
+                avatar
+                :row="3"
+            >
                 <p class="text">暂无评价</p>
             </skeleton>
         </div>
@@ -61,7 +115,11 @@
                 </template>
             </goods-action-icon>
             <template v-if="!price">
-                <goods-action-button type="warning" text="加入购物车" @click="isShowSku = true" />
+                <goods-action-button
+                    type="warning"
+                    text="加入购物车"
+                    @click="isShowSku = true"
+                />
                 <goods-action-button
                     type="danger"
                     text="立即购买"
@@ -118,22 +176,22 @@ export default {
         sku () {
             if (this.details.title) {
                 const price = this.price || this.details.price
-                this.details.sizeList = this.details.sizeList || ''
-                this.details.colorList = this.details.colorList || ''
-                const colorList = this.details.colorList.split(/[\r\n\r\n]+/)
-                const sizeList = this.details.sizeList.split(/[\r\n\r\n]+/)
-                const colorTree =  colorList.map((i, index) => {
-                                        return {
-                                            id: index,
-                                            name: i
-                                        }
-                                    })
-                const sizeTree =  sizeList.map((i, index) => {
-                                        return {
-                                            id: index,
-                                            name: i
-                                        }
-                                    })
+                const size = this.details.sizeList || ''
+                const color = this.details.colorList || ''
+                const colorList = color.split(/[\r\n\r\n]+/)
+                const sizeList = size.split(/[\r\n\r\n]+/)
+                const colorTree = colorList.map((i, index) => {
+                    return {
+                        id: index,
+                        name: i
+                    }
+                })
+                const sizeTree = sizeList.map((i, index) => {
+                    return {
+                        id: index,
+                        name: i
+                    }
+                })
                 // console.log([...colorTree.length])
                 let listData = doExchange([colorTree.map(i => i.id), sizeTree.map(i => i.id)])
                 listData = listData.map((i, index) => {
@@ -190,7 +248,7 @@ export default {
             this.current = index
         },
         async getDetails () {
-                    //    console.log(this.userId)
+            //    console.log(this.userId)
             const Details = AV.Object.createWithoutData('ProductList', this.id)
             const details = await Details.fetch()
             // console.log(details)
@@ -202,7 +260,7 @@ export default {
                 img = null
             }
             img.src = details.attributes.thumbnail
-            this.details = { 
+            this.details = {
                 ...details.attributes,
                 id: this.id
             }
@@ -230,7 +288,7 @@ export default {
                 //     number: val.selectedNum
                 // })
                 // this.$router.push(`/order-Detail?cartId=${cartId}`)
-                let orderId = addOrder([{ buyCount: 1, bookId: this.id, commodity: this.details }])
+                const orderId = addOrder([{ buyCount: 1, bookId: this.id, commodity: this.details }])
                 this.$router.push(`/order-Detail/${orderId}`)
             } else this.$router.push('/login')
         },
@@ -261,7 +319,7 @@ export default {
         transform-origin: 0px 0px;
         // transform: scale(0.5);
         img {
-            max-width: 100%!important;
+            max-width: 100% !important;
             width: 100%;
         }
     }
@@ -269,7 +327,7 @@ export default {
         padding: 5px;
         font-size: 40px;
         color: #fff;
-        background: rgb(0, 0, 0, .4);
+        background: rgb(0, 0, 0, 0.4);
         border-radius: 50%;
     }
 }
@@ -278,7 +336,7 @@ export default {
 #goods-details {
     // background: #fff;
     height: 100%;
-    padding-bottom: 50PX;
+    padding-bottom: 50px;
     .skeleton {
         padding: 20px;
         background: #fff;
@@ -400,7 +458,7 @@ export default {
     .spike {
         position: relative;
         &::after {
-            content: "活动将于12月12日开始";
+            content: '活动将于12月12日开始';
             position: absolute;
             display: block;
             top: -60px;

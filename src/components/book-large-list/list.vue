@@ -21,7 +21,7 @@ export default {
     },
     methods: {
         handleItemClick (cartId, bookId, count, price, commodity) {
-            let findIndex = this.chooseData.findIndex((item) => item.bookId === bookId)
+            const findIndex = this.chooseData.findIndex((item) => item.bookId === bookId)
             if (findIndex === -1) {
                 this.chooseData.push({ cartId, bookId, count, price, commodity })
             } else {
@@ -31,14 +31,14 @@ export default {
             this.emit()
         },
         handleNumberChange (cartId, bookId, count, price) {
-            let findIndex = this.chooseData.findIndex((item) => item.bookId === bookId)
+            const findIndex = this.chooseData.findIndex((item) => item.bookId === bookId)
             if (findIndex !== -1) {
                 this.chooseData[findIndex] = { cartId, bookId, count, price }
                 this.emit()
             }
         },
         handleRemove (cartId, bookId) {
-            let findIndex = this.chooseData.findIndex((item) => item.bookId === bookId)
+            const findIndex = this.chooseData.findIndex((item) => item.bookId === bookId)
             if (findIndex !== -1) {
                 this.chooseData.splice(findIndex, 1)
                 this.emit()
@@ -62,6 +62,6 @@ export default {
 
 <style scoped lang="scss">
 .book-large-list {
-  padding: 32px;
+    padding: 32px;
 }
 </style>

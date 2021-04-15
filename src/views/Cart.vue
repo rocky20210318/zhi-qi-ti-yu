@@ -1,7 +1,12 @@
 <template>
     <div>
         <div>
-            <van-row type="flex" justify="space-between" align="center" class="top-background">
+            <van-row
+                type="flex"
+                justify="space-between"
+                align="center"
+                class="top-background"
+            >
                 <div color="light" class="title">购物车</div>
                 <div class="count">共{{ totalCount }}件宝贝</div>
             </van-row>
@@ -11,23 +16,31 @@
                 @change="onCartChange"
                 @delete="onCartRemove"
             >
-                <book-large-list-item v-for="item in cartList" :key="item.id" :data="item" />
+                <book-large-list-item
+                    v-for="item in cartList"
+                    :key="item.id"
+                    :data="item"
+                />
             </book-large-list>
             <div v-else>
                 <div class="cart-no-data">
-                    <img src="https://img.yzcdn.cn/vant/custom-empty-image.png" width="100%"
+                    <img
+                        src="https://img.yzcdn.cn/vant/custom-empty-image.png"
+                        width="100%"
                         class="cart-no-data-img"
-                    >
+                    />
                 </div>
             </div>
         </div>
         <footer v-if="cartList.length">
-            <van-row type="flex" justify="space-between" align="center" class="footer-wrap">
+            <van-row
+                type="flex"
+                justify="space-between"
+                align="center"
+                class="footer-wrap"
+            >
                 <span class="totals">¥{{ total }}</span>
-                <a
-                    class="buy-btn"
-                    @click="handleBuy"
-                >立即购买</a>
+                <a class="buy-btn" @click="handleBuy">立即购买</a>
             </van-row>
         </footer>
         <basic-footer />
@@ -48,7 +61,7 @@ export default {
         return {
             chooseData: [],
             total: 0,
-            deleteTotal: 0,
+            deleteTotal: 0
             // cartList: []
         }
     },
@@ -59,7 +72,7 @@ export default {
         },
         totalCount () {
             return this.cartList.length - this.deleteTotal
-        },
+        }
         // total () {
         //     let total = 0
         //     for (const i in this.cartList) {
@@ -105,7 +118,7 @@ export default {
                 return false
             }
             console.log(this.chooseData)
-            let data = this.chooseData.map((item) => {
+            const data = this.chooseData.map((item) => {
                 removeCartItem(item.cartId)
                 return {
                     bookId: item.bookId,
@@ -114,7 +127,7 @@ export default {
                 }
             })
             console.log(data)
-            let orderId = addOrder(data)
+            const orderId = addOrder(data)
             this.$router.push(`/order-detail/${orderId}`)
         }
     }
@@ -137,11 +150,11 @@ $footer-height: 58px * 2;
     padding: 90px 34px 38px;
     height: 328px;
     //   background-image: url(../assets/cart-bg.png);
-    background: linear-gradient(180deg,#fcd755 0%,#d81e06 100%) ;
+    background: linear-gradient(180deg, #fcd755 0%, #d81e06 100%);
     box-sizing: border-box;
     color: #ffffff;
     .title {
-            font-size: 48px;
+        font-size: 48px;
     }
     .count {
         font-size: 14px * 2;
@@ -169,7 +182,7 @@ $footer-height: 58px * 2;
         width: 124px * 2;
         height: 41px * 2;
         line-height: 41px * 2;
-        background: linear-gradient(180deg,#fcd755 0%,#d81e06 100%);
+        background: linear-gradient(180deg, #fcd755 0%, #d81e06 100%);
         color: #fff;
         font-size: 18px * 2;
         text-align: center;

@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import { Grid, GridItem, Button } from 'vant'
+import { Grid, GridItem } from 'vant'
 import { logOut } from '../services'
 import AV from 'leancloud-storage'
 
@@ -86,15 +86,14 @@ export default {
     name: 'my',
     components: {
         Grid,
-        GridItem,
-        Button
+        GridItem
     },
     data () {
         return {
             userId: AV.User.current().id,
             userData: {
                 username: '',
-                remarks: '',
+                remarks: ''
             }
         }
     },
@@ -113,7 +112,7 @@ export default {
                 this.userData = {
                     username: data.get('username') || data.get('mobilePhoneNumber'),
                     remarks: data.get('remarks'),
-                    userImage: data.get('userImage'),
+                    userImage: data.get('userImage')
                 }
                 console.log(this.userData)
             })

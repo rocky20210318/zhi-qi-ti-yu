@@ -79,7 +79,7 @@
 <script>
 import { tabs, tab, Button, Empty, Dialog } from 'vant'
 import BookLargeList from '../components/book-large-list/index'
-import { getOrderList, orderDelete, orderRefund } from '../services'
+import { getOrderList, orderDelete } from '../services'
 
 export default {
     name: 'order-list',
@@ -177,7 +177,7 @@ export default {
     .remove-order {
         position: absolute;
         right: 0px;
-        bottom: 15px;
+        bottom: 10px;
         width: 200px;
         height: 45px;
         border-radius: 10px;

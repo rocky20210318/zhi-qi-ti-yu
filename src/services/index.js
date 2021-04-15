@@ -1,10 +1,11 @@
 import request from './request'
 import queryString from 'query-string'
+import AV from 'leancloud-storage'
+
 const apiPrefix = 'http://47.106.209.243:18081'
 const PHONE_EXP = /^(((13[0-9])|(14[5-7])|(15[0-9])|(17[0-9])|(18[0-9])|(19[0-9]))+\d{8})$/
 const PASSWORD_EXP = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
 let UserData = JSON.parse(localStorage.getItem('UserData')) || null
-import AV from 'leancloud-storage'
 
 /**
  * 执行service函数
@@ -242,7 +243,7 @@ export async function saveAddress (query) {
     const address = new Address()
     const currentUser = AV.User.current()
     query.user = currentUser
-    for(let key in query) {
+    for (const key in query) {
         // console.log(key, query[key])
         address.set(key, query[key])
     }
@@ -256,7 +257,7 @@ export async function saveAddress (query) {
 export async function updateAddress (objectId, query) {
     // console.log(query)
     const Address = AV.Object.createWithoutData('AddressList', objectId)
-    for(let key in query) {
+    for (const key in query) {
         // console.log(key, query[key])
         Address.set(key, query[key])
     }
@@ -286,7 +287,7 @@ export async function getAddress () {
     const address = new AV.Query('AddressList')
     const currentUser = AV.User.current()
     address.equalTo('user', currentUser)
-    let response = await address.find()
+    const response = await address.find()
     return response.map(i => {
         return {
             ...i.attributes,
@@ -529,7 +530,8 @@ export async function couponSelectlist (cartId) {
 export async function orderDelete (orderId) {
     let listData = getOrderList(0)
     listData = listData.filter(i => i.orderId !== orderId)
-    localStorage.setItem('order-record', JSON.stringify(listData))
+    const currentUser = AV.User.current().id
+    localStorage.setItem('order-record' + currentUser, JSON.stringify(listData))
 }
 /**
  * 申请退款
@@ -642,9 +644,9 @@ export function ifCollection (id) {
  */
 export function addCart (details) {
     console.log(details.id)
-    let cart = JSON.parse(window.localStorage.getItem('cart-record')) || []
+    const cart = JSON.parse(window.localStorage.getItem('cart-record')) || []
     // let commodity = getCommodityDetails(category, type, id)
-    let isExistIndex = cart.findIndex((item) => item.commodity.id === details.id)
+    const isExistIndex = cart.findIndex((item) => item.commodity.id === details.id)
     if (isExistIndex === -1) {
         cart.push({
             cartId: cart.length + 1,
@@ -659,12 +661,13 @@ export function addCart (details) {
  * @return orderId
  */
 export function addOrder (array) {
-    let order = JSON.parse(window.localStorage.getItem('order-record')) || []
-    let orderId = getOrderId()
-    let books = []
+    const currentUser = AV.User.current().id
+    const order = JSON.parse(window.localStorage.getItem('order-record' + currentUser)) || []
+    const orderId = getOrderId()
+    const books = []
     array.forEach((item) => {
         // let currentBook = item.commodity
-        let buyCount = item.buyCount
+        const buyCount = item.buyCount
         books.push({
             buyCount,
             commodity: item.commodity
@@ -675,7 +678,7 @@ export function addOrder (array) {
         status: 0, // 付款标识
         books
     })
-    window.localStorage.setItem('order-record', JSON.stringify(order))
+    window.localStorage.setItem('order-record' + currentUser, JSON.stringify(order))
     return orderId
 }
 
@@ -701,8 +704,8 @@ export function getCart () {
  * @param bookId
  */
 export function removeCartItem (cartId) {
-    let cart = JSON.parse(window.localStorage.getItem('cart-record')) || []
-    let index = cart.findIndex((item) => item.cartId === cartId)
+    const cart = JSON.parse(window.localStorage.getItem('cart-record')) || []
+    const index = cart.findIndex((item) => item.cartId === cartId)
     if (index !== -1) {
         cart.splice(index, 1)
     }
@@ -714,11 +717,12 @@ export function removeCartItem (cartId) {
  * @return Array<Order>
  */
 export function getOrder (id) {
+    const currentUser = AV.User.current().id
     if (id) {
-        let orders = JSON.parse(window.localStorage.getItem('order-record')) || []
+        const orders = JSON.parse(window.localStorage.getItem('order-record' + currentUser)) || []
         return orders.find((item) => String(item.orderId) === String(id))
     } else {
-        return JSON.parse(window.localStorage.getItem('order-record')) || []
+        return JSON.parse(window.localStorage.getItem('order-record' + currentUser)) || []
     }
 }
 
@@ -729,13 +733,14 @@ export async function updateAddressBooks (id, bookNames) {
 }
 
 export function ConfirmOrder (id) {
-    let orders = JSON.parse(window.localStorage.getItem('order-record')) || []
-    let index = orders.findIndex((item) => String(item.orderId) === String(id))
+    const currentUser = AV.User.current().id
+    const orders = JSON.parse(window.localStorage.getItem('order-record' + currentUser)) || []
+    const index = orders.findIndex((item) => String(item.orderId) === String(id))
     orders.splice(index, 1, {
         ...orders[index],
         status: 1
     })
-    window.localStorage.setItem('order-record', JSON.stringify(orders))
+    window.localStorage.setItem('order-record' + currentUser, JSON.stringify(orders))
 }
 
 export function getOrderList (status) {
@@ -757,10 +762,10 @@ export function getOrderList (status) {
 }
 
 // 执行组合排列的函数
-export function doExchange(array){
+export function doExchange (array) {
     var len = array.length
     // 当数组大于等于2个的时候
-    if(len >= 2){
+    if (len >= 2) {
         // 第一个数组的长度
         var len1 = array[0].length
         // 第二个数组的长度
@@ -772,21 +777,21 @@ export function doExchange(array){
         // 申明新数组的索引
         var index = 0
         // 2层嵌套循环,将组合放到新数组中
-        for(var i=0; i<len1; i++){
-            for(var j=0; j<len2; j++){
+        for (let i = 0; i < len1; i++) {
+            for (var j = 0; j < len2; j++) {
                 items[index] = [array[0][i], array[1][j]]
-                index++;
+                index++
             }
         }
         // 将新组合的数组并到原数组中
-        var newArr = new Array(len -1)
-        for(var i=2; i < array.length; i++){
-            newArr[i-1] = array[i]
+        var newArr = new Array(len - 1)
+        for (let i = 2; i < array.length; i++) {
+            newArr[i - 1] = array[i]
         }
         newArr[0] = items
         // 执行回调
         return doExchange(newArr)
-    }else{
+    } else {
         return array[0]
     }
 }
