@@ -28,7 +28,6 @@ export default {
         Sticky
     },
     data () {
-        console.log(this.$route.query.keys)
         return {
             keys: this.$route.query.keys,
             value: 0,

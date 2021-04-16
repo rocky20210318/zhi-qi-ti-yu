@@ -12,12 +12,12 @@
                 multiple />
         </cell-group>
         <cell-group>
-            <field v-model="userData.userName" maxlength="8" label="用户名" placeholder="请输入用户名" />
+            <field v-model="userData.username" maxlength="11" label="用户名" placeholder="请输入用户名" />
         </cell-group>
         <cell-group>
             <field v-model="userData.remarks" maxlength="15" label="个性签名" placeholder="请输入个性签名" />
         </cell-group>
-        <div class="button"><Button @click="submit" :loading="loading" round block color="#30b9c3">提交反馈</Button></div>
+        <div class="button"><Button @click="submit" :loading="loading" round block color="#323233">提交反馈</Button></div>
     </div>
 </template>
 
@@ -38,7 +38,7 @@ export default {
             val: '',
             loading: false,
             userData: {
-                userName: '',
+                username: '',
                 userImage: ''
             },
             imgaeList: []
@@ -56,11 +56,9 @@ export default {
             const User = AV.User.current()
             await User.fetch().then(data => {
                 this.userData = {
-                    userName: data.get('userName'),
+                    username: data.get('username'),
                     remarks: data.get('remarks'),
-                    userImage: data.get('userImage'),
-                    readNumber: data.get('readNumber') || 0,
-                    watchlist: data.get('watchlist').length
+                    userImage: data.get('userImage')
                 }
             })
         },
@@ -77,15 +75,15 @@ export default {
             this.$toast('文件大小不能超过 1M')
         },
         submit () {
-            if (!this.userData.userName) {
+            if (!this.userData.username) {
                 this.$toast('用户名不能为空')
                 return false
             }
             this.loading = true
             const user = AV.Object.createWithoutData('_User', AV.User.current().id)
-            user.set('userName', this.userData.userName)
+            user.set('username', this.userData.username)
             user.set('remarks', this.userData.remarks)
-            if (this.imgaeList[0].url) user.set('userImage', this.imgaeList[0].url)
+            if (this.imgaeList[0]) user.set('userImage', this.imgaeList[0].url)
             user.save().then(() => {
                 this.$toast({
                     message: '用户信息更新成功',

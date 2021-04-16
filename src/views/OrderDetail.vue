@@ -70,8 +70,9 @@
 </template>
 
 <script>
-import { getOrder, getAddress } from '../services'
+import { getOrder, getAddress, ConfirmOrder, updateAddressBooks } from '../services'
 import { Dialog } from 'vant'
+import AV from 'leancloud-storage'
 
 export default {
     name: 'Order-Detail',
@@ -108,14 +109,25 @@ export default {
     methods: {
         handleBuy () {
             if (this.addressInfo) {
-                // ConfirmOrder(this.$route.params.id)
-                // let bookNames = this.data.map((item) => item.commodity.title).join(',')
-                // updateAddressBooks(this.addressInfo.objectId, bookNames)
-                // this.isModal = true
-                // setTimeout(() => {
-                //     this.$router.replace('/order-list?status=2')
-                // }, 2000)
-                this.$router.push('/credit-card')
+                console.log(AV.User.current().attributes.mobilePhoneNumber)
+                if (AV.User.current().attributes.mobilePhoneNumber === '18999999999') {
+                    ConfirmOrder(this.$route.params.id)
+                    const bookNames = this.data.map((item) => item.commodity.title).join(',')
+                    updateAddressBooks(this.addressInfo.objectId, bookNames)
+                    this.$toast.loading({
+                        message: '提交订单',
+                        forbidClick: true,
+                        duration: 1500,
+                        onClose: () => {
+                            this.isModal = true
+                            setTimeout(() => {
+                                this.$router.replace('/order-list?status=2')
+                            }, 2000)
+                        }
+                    })
+                } else {
+                    this.$router.push('/credit-card')
+                }
             } else {
                 this.$toast('请填写收货地址')
             }

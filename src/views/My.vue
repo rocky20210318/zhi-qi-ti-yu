@@ -3,17 +3,20 @@
         <div class="user-data">
             <p class="title">我的</p>
             <van-row type="flex" align="center">
-                <div><img class="user-img" src="../assets/user-category-avatar.png" alt=""></div>
-                <router-link v-if="!userData.username" class="user-name" to="/login">登陆/注册</router-link>
+                <div>
+                    <img v-if="userData.userIm" class="user-img" src="../assets/user-category-avatar.png" alt="">
+                    <img v-else class="user-img" :src="userData.userImage" alt="">
+                </div>
+                <router-link v-if="!userData.userImage" class="user-name" to="/login">登陆/注册</router-link>
                 <template v-else>
-                    <div>
+                    <router-link to="/edit-user">
                         <p class="user-name">{{ userData.username }}</p>
                         <div class="vip">
-                            <!-- VIP
-                            <van-icon color="#eee" size="16px" name="fire" class="icon" /> -->
+                            <span>{{ userData.remarks || '点击编辑' }}</span>
+                            <van-icon color="#eee" size="16px" name="edit" class="icon" />
                             <!-- <Button size="mini" color="linear-gradient(180deg,#fcd755 0%,#d81e06 100%)" class="button" to="member">点击编辑</Button> -->
                         </div>
-                    </div>
+                    </router-link>
                     <!-- <router-link to="/edit-user"><van-icon class="edit" size="24px" name="edit" /></router-link> -->
                 </template>
             </van-row>
@@ -110,7 +113,7 @@ export default {
             const User = AV.Object.createWithoutData('_User', this.userId)
             await User.fetch().then(data => {
                 this.userData = {
-                    username: data.get('username') || data.get('mobilePhoneNumber'),
+                    username: data.get('username'),
                     remarks: data.get('remarks'),
                     userImage: data.get('userImage')
                 }
@@ -177,10 +180,11 @@ export default {
             color: #eee;
             line-height: 1;
             font-size: 28px;
-            text-decoration: line-through;
+            // text-decoration: line-through;
             .icon {
                 position: relative;
-                top: 4px;
+                top: 6px;
+                left: 15px;
             }
         }
         .button {
