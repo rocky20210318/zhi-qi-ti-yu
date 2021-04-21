@@ -1,6 +1,10 @@
 <template>
     <div id="home">
         <div id="imageMap-1">
+            <van-row type="flex" justify="space-between" align="center" class="logo">
+                    <img src="../assets/logo.png" alt="">
+                    <span>正京体育</span>
+            </van-row>
             <img src="../assets/home-1.jpg" alt="">
             <router-link to="/coupon-list" class="itme-1" />
         </div>
@@ -16,7 +20,7 @@
             <router-link to="/search?keys=运动包" class="itme-1" />
         </div>
         <p v-if="caseNumber" class="record"><a href="https://beian.miit.gov.cn/">{{ caseNumber }}</a></p>
-        <PrivacyAgreement />
+        <PrivacyAgreement v-if="!caseNumber" />
         <basic-footer />
     </div>
 </template>
@@ -39,10 +43,12 @@ export default {
             const domain = document.domain
             let text = null
             switch (domain) {
-            case 'www.jingkuangweb.xyz':
+            case '60.205.186.43':
+            // case 'localhost':
                 text = '沪ICP备2020027770号-1'
                 break
             }
+            console.log(text)
             return text
         }
     },
@@ -60,14 +66,29 @@ export default {
         width: 100%;
         vertical-align: top;
     }
+    .logo {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        padding: 14px;
+        border-radius: 8px;
+        background: rgba(0,0,0,0.7);
+        font-size: 28px;
+        font-weight: 500;
+        color: #fff;
+        img {
+            width: 50px;
+            margin-right: 10px;
+        }
+    }
     .record {
         position: relative;
         z-index: 0;
         // top: -150px;
+        margin: 30px 0;
         text-align: center;
         font-size: 28px;
         color: #666;
-        margin-bottom: 20px;
     }
     #imageMap-1 {
         position: relative;

@@ -2,7 +2,7 @@
     <div id="set">
         <van-nav-bar fixed left-arrow @click-left="$router.go(-1)" placeholder title="设置" />
         <cell-group>
-            <!-- <cell title="问题反馈" icon="location-o" to="/feedback" is-link /> -->
+            <cell title="问题反馈" icon="service-o" to="/feedback" is-link />
             <cell title="检查更新" icon="replay" @click="Update" is-link />
             <!-- <cell title="修改密码" to="/password-reset" is-link /> -->
             <cell title="用户协议" icon="coupon-o" to="/agreement" is-link />

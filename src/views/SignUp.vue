@@ -36,7 +36,7 @@
                         />
                     </div>
                 </div>
-                <Button color="#30b9c3"
+                <Button color="#313635"
                     :disabled="!(phoneTest && valuePwd)"
                     @click="submitButton"
                     :loading="loginLoading"
@@ -46,7 +46,7 @@
                     class="button">注册</Button>
                 <!-- <p class="tipsBox">登录/注册表示同意<span class="privacy">《用户服务协议》</span></p> -->
                 <van-row type="flex" align="center" justify="center" class="tipsBox">
-                    <checkbox v-model="checked" checked-color="#30b9c3" icon-size="0.38rem" class="checkbox" />
+                    <checkbox v-model="checked" checked-color="#313635" icon-size="0.38rem" class="checkbox" />
                     <p>我已阅读并同意<router-link class="privacy" to="/privacy">《隐私政策》</router-link>与<router-link class="privacy" to="/agreement">《用户协议》</router-link></p>
                 </van-row>
                 <p class="switchPage"><router-link to="/login">去登陆</router-link></p>

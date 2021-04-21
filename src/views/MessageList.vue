@@ -10,8 +10,13 @@
                 />
             </Tab>
             <Tab title="优惠推送">
-                <div @click="$router.push('/sign-in-1')" class="banner-box"><img src="../assets/banner-2.png" alt=""></div>
-                <div @click="$router.push('/member')" class="banner-box"><img src="../assets/banner-3.jpg" alt=""></div>
+                <empty
+                    class="custom-image"
+                    image="https://img.yzcdn.cn/vant/custom-empty-image.png"
+                    description="暂无优惠信息"
+                />
+                <!-- <div @click="$router.push('/sign-in-1')" class="banner-box"><img src="../assets/banner-2.png" alt=""></div> -->
+                <!-- <div @click="$router.push('/member')" class="banner-box"><img src="../assets/banner-3.jpg" alt=""></div> -->
             </Tab>
             <Tab title="物流信息">
                 <empty

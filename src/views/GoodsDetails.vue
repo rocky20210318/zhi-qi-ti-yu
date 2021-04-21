@@ -73,7 +73,7 @@
         </ul>
         <div class="member-box">
             <div class="member">
-                <router-link to="/member"
+                <router-link to="/search?keys=软壳衣裤"
                     ><img src="../assets/my-banner.jpeg" alt=""
                 /></router-link>
             </div>
@@ -235,7 +235,7 @@ export default {
             return !!AV.User.current()
         },
         isTestAccount () {
-            return getUserData().nickName === '19965412404'
+            return getUserData().nickName === '15902173921'
         }
     },
     async created () {

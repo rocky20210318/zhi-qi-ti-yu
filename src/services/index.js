@@ -131,15 +131,14 @@ export function getUserData () {
 }
 
 /**
- * 注销登陆
-
- * @returns {Promise<User>}
+ * 退出登录
  */
-export function logOut () {
-    UserData = null
-    localStorage.clear('UserData')
-    return true
+export async function logOut () {
+    const response = await AV.User.logOut()
+    // localStorage.clear()
+    return response
 }
+
 /**
  * 删除账号
 

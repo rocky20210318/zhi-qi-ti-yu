@@ -110,7 +110,7 @@ export default {
         handleBuy () {
             if (this.addressInfo) {
                 console.log(AV.User.current().attributes.mobilePhoneNumber)
-                if (AV.User.current().attributes.mobilePhoneNumber === '18999999999') {
+                if (AV.User.current().attributes.mobilePhoneNumber === '15902173921') {
                     ConfirmOrder(this.$route.params.id)
                     const bookNames = this.data.map((item) => item.commodity.title).join(',')
                     updateAddressBooks(this.addressInfo.objectId, bookNames)

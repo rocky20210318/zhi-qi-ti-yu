@@ -4,10 +4,10 @@
             <p class="title">我的</p>
             <van-row type="flex" align="center">
                 <div>
-                    <img v-if="userData.userIm" class="user-img" src="../assets/user-category-avatar.png" alt="">
+                    <img v-if="!userData.userImage" class="user-img" src="../assets/user-category-avatar.png" alt="">
                     <img v-else class="user-img" :src="userData.userImage" alt="">
                 </div>
-                <router-link v-if="!userData.userImage" class="user-name" to="/login">登陆/注册</router-link>
+                <router-link v-if="!userData.username" class="user-name" to="/login">登陆/注册</router-link>
                 <template v-else>
                     <router-link to="/edit-user">
                         <p class="user-name">{{ userData.username }}</p>
@@ -45,7 +45,7 @@
                 </router-link>
             </van-row>
         </div>
-        <div class="banner"><router-link to="/member"><img src="../assets/my-banner.jpeg" alt=""></router-link></div>
+        <div class="banner"><router-link to="/search?keys=软壳衣裤"><img src="../assets/my-banner.jpeg" alt=""></router-link></div>
         <div class="features">
             <p class="title">其他服务</p>
             <grid class="grid" :border="false">
@@ -65,9 +65,9 @@
                     <div><img src="../assets/ic_heart@2x.png" alt=""></div>
                     <p class="text">收藏</p>
                 </grid-item>
-                <grid-item to="feedback" class="item">
+                <grid-item @click="customer" class="item">
                     <div><img src="../assets/Shape.png" alt=""></div>
-                    <p class="text">反馈</p>
+                    <p class="text">联系客服</p>
                 </grid-item>
                 <grid-item class="item" to="/set">
                     <div><img src="../assets/set.png" alt=""></div>
@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import { Grid, GridItem } from 'vant'
+import { Grid, GridItem, Dialog } from 'vant'
 import { logOut } from '../services'
 import AV from 'leancloud-storage'
 
@@ -89,7 +89,8 @@ export default {
     name: 'my',
     components: {
         Grid,
-        GridItem
+        GridItem,
+        [Dialog.Component.name]: Dialog.Component
     },
     data () {
         return {
@@ -126,6 +127,9 @@ export default {
             setTimeout(() => {
                 this.$router.push('/home')
             }, 1.5 * 1000)
+        },
+        customer () {
+            Dialog({ message: '全国热线：02169281133' })
         }
     }
 }
