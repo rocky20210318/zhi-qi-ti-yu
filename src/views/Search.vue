@@ -80,6 +80,7 @@ export default {
         },
         search () {
             this.$refs.goodsList.onRefresh()
+            // Location.
         }
     }
 }
