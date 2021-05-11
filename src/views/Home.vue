@@ -1,22 +1,27 @@
 <template>
     <div id="home">
         <div id="imageMap-1">
-            <van-row type="flex" justify="space-between" align="center" class="logo">
-                    <img src="../assets/logo.png" alt="">
-                    <span>正京体育</span>
-            </van-row>
-            <img src="../assets/home-1.jpg" alt="">
-            <router-link to="/coupon-list" class="itme-1" />
+            <div v-if="caseNumber" type="flex" justify="space-between" align="center" class="logo">
+                    <div><img src="../assets/logo.png" alt=""></div>
+                    <p>飞狐体育</p>
+            </div>
+            <img src="../assets/home-1.jpeg" alt="">
+            <!-- <router-link to="/coupon-list" class="itme-1" /> -->
         </div>
         <div id="imageMap-2">
             <img src="../assets/home-2.jpeg" alt="">
-            <router-link to="/search?keys=冲锋衣裤" class="itme-1" />
-            <router-link to="/search?keys=软壳衣裤" class="itme-2" />
-            <router-link to="/search?keys=抓绒衣裤" class="itme-3" />
-            <router-link to="/search?keys=健身服" class="itme-4" />
+            <van-row type="flex" justify="space-between" align="center" class="router-link" >
+                <router-link to="/search?keys=户外" class="itme" />
+                <router-link to="/search?keys=健身" class="itme" />
+                <router-link to="/search?keys=旅行" class="itme" />
+            </van-row>
         </div>
         <div id="imageMap-3">
             <img src="../assets/home-3.jpeg" alt="">
+            <router-link to="/coupon-list" class="itme-1" />
+        </div>
+        <div id="imageMap-4">
+            <img src="../assets/home-4.jpeg" alt="">
             <router-link to="/search?keys=运动包" class="itme-1" />
         </div>
         <p v-if="caseNumber" class="record"><a href="https://beian.miit.gov.cn/">{{ caseNumber }}</a></p>
@@ -43,9 +48,9 @@ export default {
             const domain = document.domain
             let text = null
             switch (domain) {
-            case '60.205.186.43':
+            case 'www.jinshen.xyz':
             // case 'localhost':
-                text = '沪ICP备2020027770号-1'
+                text = '鲁ICP备20018859号-1'
                 break
             }
             console.log(text)
@@ -62,6 +67,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 #home {
+    // padding-bottom: 100px;
     img {
         width: 100%;
         vertical-align: top;
@@ -72,12 +78,12 @@ export default {
         left: 20px;
         padding: 14px;
         border-radius: 8px;
-        background: rgba(0,0,0,0.7);
+        // background: rgba(0,0,0,0.7);
         font-size: 28px;
         font-weight: 500;
         color: #fff;
         img {
-            width: 50px;
+            width: 80px;
             margin-right: 10px;
         }
     }
@@ -102,39 +108,17 @@ export default {
     }
     #imageMap-2 {
         position: relative;
-        .itme-1 {
+        .router-link {
             position: absolute;
-            top: 150px;
-            left: 30px;
-            display: block;
-            width: 290px;
-            height: 330px;
-        }
-        .itme-2 {
-            position: absolute;
-            top: 150px;
-            right: 30px;
-            display: block;
-            width: 380px;
-            height: 160px;
-        }
-        .itme-3 {
-            position: absolute;
-            top: 330px;
-            right: 30px;
-            display: block;
-            width: 380px;
-            height: 160px;
-        }
-        .itme-4 {
-            position: absolute;
-            bottom: 66px;
-            right: 0;
             left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+        }
+        a {
             display: block;
-            width: 90%;
-            height: 190px;
-            margin: auto;
+            width: 33%;
+            height: 100%;
         }
     }
     #imageMap-3 {
@@ -150,5 +134,18 @@ export default {
             margin: auto;
         }
     }
+    #imageMap-4 {
+        position: relative;
+        .itme-1 {
+            position: absolute;
+            top: 0px;
+            left: 0;
+            right: 0;
+            display: block;
+            width: 100%;
+            height: 100px;
+            margin: auto;
+        }
+    }
 }
-</style>
+</style>x

@@ -1,6 +1,7 @@
 <template>
     <div id="order-list">
         <van-nav-bar fixed left-arrow @click-left="$router.go(-1)" placeholder title="订单管理" />
+        <Search v-model="keys" show-action placeholder="请输入商品标题" class="search" @search="search" />
         <tabs v-model="showType" sticky animated swipeable color="#121314" @click="onClickTab">
             <tab title="全部订单"/>
             <tab title="待付款"/>
@@ -12,7 +13,7 @@
             <div v-for="data in orderList" :key="data.orderId" class="order-item">
                 <van-row type="flex" justify="space-between" align="center" class="text">
                     <span>订单号：{{ data.orderId }}</span>
-                    <!-- <span>{{ data.orderStatusText }}</span> -->
+                    <span>{{ data.status === 0 ? '待付款' : '待发货' }}</span>
                 </van-row>
                 <book-large-list
                     class="list"
@@ -28,7 +29,7 @@
                         @click.native="handleItemClick(data)"
                     />
                 </book-large-list>
-                <van-row type="flex" justify="space-between" align="center" class="book-detail">
+                <van-row type="flex" justify="end" align="center" class="book-detail">
                     <!-- <div>
                         <Button
                             v-if="isShowCancelOrder(data.status)"
@@ -45,7 +46,7 @@
                             v-if="isShowCancelOrder(data.status)"
                             type="primary"
                             radius
-                            class="remove-order"
+                            class="button"
                             @click="showOrderDelete(data.orderId)"
                         >
                             取消订单
@@ -56,7 +57,7 @@
                             v-if="isShowRefundOrder(data.status)"
                             type="primary"
                             radius
-                            class="remove-order"
+                            class="button"
                             @click="showOrderRefund(data.id, data.actualPrice)"
                         >
                             申请退款
@@ -77,7 +78,7 @@
 </template>
 
 <script>
-import { tabs, tab, Button, Empty, Dialog } from 'vant'
+import { tabs, tab, Button, Empty, Dialog, Search } from 'vant'
 import BookLargeList from '../components/book-large-list/index'
 import { getOrderList, orderDelete } from '../services'
 
@@ -89,7 +90,8 @@ export default {
         Button,
         Empty,
         BookLargeList,
-        BookLargeListItem: BookLargeList.Item
+        BookLargeListItem: BookLargeList.Item,
+        Search
     },
     data () {
         return {
@@ -97,7 +99,8 @@ export default {
             orderList: [],
             isShowAlter: false,
             alterData: null,
-            showType: Number(this.$route.query.showType) || 0
+            showType: Number(this.$route.query.showType) || 0,
+            keys: ''
         }
     },
     computed: {
@@ -156,7 +159,8 @@ export default {
             }).then(() => {
                 this.orderRefund(orderId)
             }).catch(() => {})
-        }
+        },
+        search () {}
     }
 }
 </script>
@@ -174,17 +178,25 @@ export default {
         line-height: 45px;
         color: #fff;
     }
-    .remove-order {
-        position: absolute;
-        right: 0px;
-        bottom: 10px;
-        width: 200px;
-        height: 45px;
-        border-radius: 10px;
-        background: #fff;
-        border: 0 solid #999;
-        line-height: 45px;
-        color: #999;
+    .button {
+        width: 180px;
+        height: 50px;
+        background-color: #f1f1f1;
+        box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        border: 0;
+        color: #6e6e6e;
+        line-height: 50px;
+        // position: absolute;
+        // right: 0px;
+        // bottom: 10px;
+        // width: 200px;
+        // height: 45px;
+        // border-radius: 10px;
+        // background: #fff;
+        // border: 0 solid #999;
+        // line-height: 45px;
+        // color: #999;
     }
     .order-item {
         position: relative;
@@ -194,11 +206,14 @@ export default {
         .text {
             padding: 20px 40px 0;
             font-size: 28px;
-            color: #121314;
+            color: #888;
+        }
+        .list {
+            padding: 0;
         }
         .item {
-            border: 1px solid #eee;
-            background: #f7f7f7;
+            // border: 1px solid #eee;
+            // background: #f7f7f7;
         }
     }
     .payMethod {
@@ -232,7 +247,11 @@ export default {
             a {
                 display: block;
             }
+        }
     }
-}
+    .book-detail {
+        padding: 20px;
+        padding-top: 0;
+    }
 }
 </style>

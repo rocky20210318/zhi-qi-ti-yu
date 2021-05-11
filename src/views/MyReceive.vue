@@ -1,13 +1,13 @@
 <template>
-    <div id="coupon-list">
+    <div id="my-receive">
         <van-nav-bar
             fixed
             left-arrow
             @click-left="$router.go(-1)"
             placeholder
-            title="领取优惠卷"
+            title="我的优惠卷"
         />
-        <ul class="list">
+        <ul class="list" v-if="listData.length !== 0">
             <li
                 v-for="item in listData"
                 :key="item.price"
@@ -42,20 +42,21 @@
                         <p class="title">{{ item.price }}元优惠券</p>
                         <p class="time">2021.06.01-2021.06.04</p>
                     </div>
-                    <div v-if="!item.isReceive" class="button" @click="receive(item)">领取</div>
-                    <div v-else class="button">已领取</div>
+                    <div class="button">不可<br>使用</div>
                 </van-row>
             </li>
         </ul>
+        <div v-else class="empty">
+            <img src="../assets/custom-empty-image.png" alt="">
+            <router-link to="/coupon-list" class="button">去领取</router-link>
+        </div>
     </div>
 </template>
 
 <script>
-import AV from 'leancloud-storage'
-import { getCoupons, getCouponsList } from '../services'
-
+import { getCouponsList } from '../services'
 export default {
-    name: 'coupon-list',
+    name: 'my-receive',
     components: {
     },
     data () {
@@ -72,55 +73,13 @@ export default {
     },
     methods: {
         setReceiveList () {
-            const listData = [
-                {
-                    id: 1,
-                    price: 40,
-                    condition: 199,
-                    isReceive: false
-                },
-                {
-                    id: 2,
-                    price: 80,
-                    condition: 399,
-                    isReceive: false
-                },
-                {
-                    id: 3,
-                    price: 130,
-                    condition: 599,
-                    isReceive: false
-                },
-                {
-                    id: 4,
-                    price: 200,
-                    condition: 899,
-                    isReceive: false
-                }
-            ]
-            listData.forEach(i => {
-                i.isReceive = this.ifReceive(i)
-            })
-            this.listData = listData
-        },
-        receive (item) {
-            if (AV.User.current()) {
-                getCoupons(item)
-                this.setReceiveList()
-            } else this.$router.push('/login')
-        },
-        ifReceive (item) {
-            if (AV.User.current()) {
-                const couponsList = getCouponsList()
-                const coupons = couponsList.filter(i => item.id === i.id)
-                return coupons.length !== 0
-            }
+            this.listData = getCouponsList()
         }
     }
 }
 </script>
 <style lang="scss" scoped>
-#coupon-list {
+#my-receive {
     .list {
         padding: 0 30px;
         & >li:nth-child(n) {
@@ -174,13 +133,35 @@ export default {
         .button {
             width: 108px;
             height: 200px;
+            padding-top: 60px;
+            box-sizing: border-box;
             background: #fff;
             border-radius: 10px;
             font-size: 28px;
             font-weight: 700;
-            line-height: 200px;
+            line-height: 1.5;
             text-align: center;
             color: #333;
+        }
+    }
+    .empty {
+        img {
+            display: block;
+            width: 60%;
+            margin: 200px auto 0;
+        }
+        .button {
+            display: block;
+            width: 660px;
+            height: 88px;
+            margin: 200px auto;
+            background-image: linear-gradient(135deg, #ffb990 0%, #ff3241 100%);
+            box-shadow: 0px 4px 30px 0px rgba(255, 61, 72, 0.39);
+            border-radius: 60px;
+            font-size: 32px;
+            color: #fff;
+            text-align: center;
+            line-height: 88px;
         }
     }
 }

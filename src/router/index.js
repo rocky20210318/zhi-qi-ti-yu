@@ -59,6 +59,11 @@ const routes = [
         component: () => import('../views/CouponList.vue')
     },
     {
+        path: '/my-receive',
+        name: 'my-receive',
+        component: () => import('../views/MyReceive.vue')
+    },
+    {
         path: '/my',
         name: 'My',
         component: () => import('../views/My.vue'),

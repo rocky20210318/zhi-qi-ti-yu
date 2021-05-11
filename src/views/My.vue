@@ -1,7 +1,10 @@
 <template>
     <div id="my">
         <div class="user-data">
-            <p class="title">我的</p>
+            <van-row type="flex" align="center" justify="space-between" class="">
+                <p class="title">我的</p>
+                <router-link to="/message-list"><van-icon name="comment-o" size=".65rem" color="#fff" class="comment-o" /></router-link>
+            </van-row>
             <van-row type="flex" align="center">
                 <div>
                     <img v-if="!userData.userImage" class="user-img" src="../assets/user-category-avatar.png" alt="">
@@ -10,15 +13,25 @@
                 <router-link v-if="!userData.username" class="user-name" to="/login">登陆/注册</router-link>
                 <template v-else>
                     <router-link to="/edit-user">
-                        <p class="user-name">{{ userData.username }}</p>
-                        <div class="vip">
+                        <p class="user-name">{{ userData.username }}<van-icon color="#eee" size="16px" name="edit" class="icon" /></p>
+                        <!-- <div class="vip">
                             <span>{{ userData.remarks || '点击编辑' }}</span>
                             <van-icon color="#eee" size="16px" name="edit" class="icon" />
-                            <!-- <Button size="mini" color="linear-gradient(180deg,#fcd755 0%,#d81e06 100%)" class="button" to="member">点击编辑</Button> -->
-                        </div>
+                            <Button size="mini" color="linear-gradient(180deg,#fcd755 0%,#d81e06 100%)" class="button" to="member">点击编辑</Button>
+                        </div> -->
                     </router-link>
                     <!-- <router-link to="/edit-user"><van-icon class="edit" size="24px" name="edit" /></router-link> -->
                 </template>
+            </van-row>
+            <van-row type="flex" align="center" justify="space-between" class="coupon">
+                <div>
+                    <van-row type="flex" align="center" justify="space-between" class="title">
+                        <van-icon size="0.5rem" name="refund-o" class="icon" />
+                        <p class="">我的优惠卷</p>
+                    </van-row>
+                    <p class="quantity"><span class="nub">{{ collectionNub }}</span>张</p>
+                </div>
+                <router-link to="/my-receive" class="button">查看</router-link>
             </van-row>
         </div>
         <div class="order">
@@ -45,8 +58,8 @@
                 </router-link>
             </van-row>
         </div>
-        <div class="banner"><router-link to="/search?keys=软壳衣裤"><img src="../assets/my-banner.jpeg" alt=""></router-link></div>
-        <div class="features">
+        <!-- <div class="banner"><router-link to="/search?keys=软壳衣裤"><img src="../assets/my-banner.jpeg" alt=""></router-link></div> -->
+        <!-- <div class="features">
             <p class="title">其他服务</p>
             <grid class="grid" :border="false">
                 <grid-item class="item" to="/message-list">
@@ -57,10 +70,10 @@
                     <div><img src="../assets/ic_location.png" alt=""></div>
                     <p class="text">地址管理</p>
                 </grid-item>
-                <!-- <grid-item class="item" to="/pay-list">
+                <grid-item class="item" to="/pay-list">
                     <div><img src="../assets/ic_wallet.png" alt=""></div>
                     <p class="text">支付</p>
-                </grid-item> -->
+                </grid-item>
                 <grid-item class="item" to="/collect">
                     <div><img src="../assets/ic_heart@2x.png" alt=""></div>
                     <p class="text">收藏</p>
@@ -74,22 +87,28 @@
                     <p class="text">设置</p>
                 </grid-item>
             </grid>
-        </div>
-        <!-- <p class="privacy-agreement">点击查看用<router-link to="/agreement">《用户协议》</router-link>及<router-link to="/privacy">《隐私协议》</router-link></p> -->
+        </div> -->
+        <CellGroup class="features">
+            <Cell title="地址管理" is-link to="/address-list?switchable=false" />
+            <Cell title="收藏" is-link to="/collect" />
+            <Cell title="联系客服" is-link @click="customer" />
+            <Cell title="设置" is-link to="/set" />
+        </CellGroup>
+        <p class="privacy-agreement">查看用<router-link to="/agreement">《用户协议》</router-link>及<router-link to="/privacy">《隐私协议》</router-link></p>
         <basic-footer />
     </div>
 </template>
 
 <script>
-import { Grid, GridItem, Dialog } from 'vant'
-import { logOut } from '../services'
+import { Cell, CellGroup, Dialog } from 'vant'
+import { logOut, getCouponsList } from '../services'
 import AV from 'leancloud-storage'
 
 export default {
     name: 'my',
     components: {
-        Grid,
-        GridItem,
+        Cell,
+        CellGroup,
         [Dialog.Component.name]: Dialog.Component
     },
     data () {
@@ -98,13 +117,16 @@ export default {
             userData: {
                 username: '',
                 remarks: ''
-            }
+            },
+            collectionNub: 0
         }
     },
     computed: {
     },
     async created () {
         await this.getUserData()
+        // console.log(getCouponsList())
+        this.collectionNub = getCouponsList().length
     },
     mounted () {
     },
@@ -151,15 +173,15 @@ export default {
         }
     }
     .user-data {
-        height: 450px;
+        height: 476px;
         margin: 0 -24px;
         padding: 0 36px;
         box-sizing: border-box;
         background: url('../assets/my-top-bg.png') no-repeat;
-        background-size: 100%;
+        background-size: 100% auto;
         .title {
             padding: 30px 0 30px;
-            font-size: 48px;
+            font-size: 36px;
             color: #fff;
         }
         .user-img {
@@ -168,15 +190,21 @@ export default {
             // padding: 20px;
             margin-right: 32px;
             box-sizing: border-box  ;
-            background: #fff;
+            // background: #fff;
             border-radius: 50%;
             vertical-align: top;
         }
         .user-name {
             margin-right: 10px;
             font-size: 36px;
+            font-size: 500;
             line-height: 1;
             color: #fff;
+            .icon {
+                position: relative;
+                top: 6px;
+                left: 15px;
+            }
         }
         .vip {
             position: relative;
@@ -191,19 +219,48 @@ export default {
                 left: 15px;
             }
         }
-        .button {
-            // margin-left: 30px;
+        .coupon {
+            margin-top: 66px;
+            padding: 30px;
+            color: #fff;
+            line-height: 1;
+            .icon {
+                margin-right: 10px;
+            }
+            .title {
+                margin: 0;
+                // margin-left: 10px;
+                padding: 0;
+                font-size: 28px;
+                font-weight: 500;
+            }
+            .quantity {
+                margin-top: 10px;
+                font-size: 24px;
+                span {
+                    margin-right: 16px;
+                    font-size: 40px;
+                    font-weight: 700;
+                }
+            }
+            .button {
+                padding: 14px 34px;
+                background-image: linear-gradient(135deg,#ffb990 0%, #ff3241 100%);
+                border-radius: 32px;
+                font-size: 28px;
+                font-weight: 700;
+            }
         }
-        // .edit {
-        // }
     }
     .order {
-        margin: -110px 0 20px;
+        margin: 0px 0 20px;
         padding-bottom: 25px;
+        box-shadow: 0px 8px 40px 0px rgba(0, 0, 0, 0.1);
+        border-radius: 20px;
         background-color: #ffffff;
-        border-radius: 8px;
+        // border-radius: 8px;
         .top {
-            padding: 32px 0 15px 26px;
+            padding: 40px 40px 0px 40px;
         }
         .title {
             font-size: 36px;
@@ -225,11 +282,13 @@ export default {
             // margin-bottom: 20px;
         }
         img {
-            max-width: 75px;
+            max-width: 150px;
             // min-height: 48px;
             vertical-align: middle;
         }
         .text {
+            position: relative;
+            top: -40px;
             text-align: center;
         }
     }
@@ -246,7 +305,9 @@ export default {
     .features {
         margin: 20px 0 30px;
         background-color: #ffffff;
-        border-radius: 8px;
+        box-shadow: 0px 8px 40px 0px rgba(0, 0, 0, 0.1);
+        border-radius: 20px;
+        overflow: hidden;
         .grid {
             // padding: 0 40px;
         }

@@ -73,8 +73,8 @@ export default {
         border-color: #313635;
     }
     .van-button--danger {
-        border-color: #313635;
-        background: #313635;
+        border: 0;
+        background: linear-gradient(135deg, #ffb990 0%, #ff3241 100%);
     }
 }
 </style>

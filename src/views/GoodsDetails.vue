@@ -5,7 +5,9 @@
             :border="false"
             fixed
             left-arrow
+            placeholder
             @click-left="$router.go(-1)"
+            title="商品详情"
         />
         <swipe
             class="banner"
@@ -19,23 +21,29 @@
             /></swipe-item>
         </swipe>
         <skeleton :loading="!details.title" class="skeleton" :row="2">
-            <van-row
+            <div
                 v-if="true"
-                type="flex"
-                justify="space-between"
-                align="center"
                 class="title-pire"
             >
                 <p class="title">{{ details.title }}</p>
                 <div class="pire">
                     <p class="">
                         ￥{{ price || Math.floor(details.price) || 0 }}
-                    </p>
-                    <p class="original-price">
-                        ￥{{ Math.floor(details.price / 0.9) || 0 }}
+                        <span class="original-price">￥{{ Math.floor(details.price / 0.9) || 0 }}</span>
                     </p>
                 </div>
-            </van-row>
+
+                <van-row
+                    type="flex"
+                    justify="space-between"
+                    align="center"
+                    class="tap"
+                >
+                    <p class="item">快递：包邮</p>
+                    <p class="item">月销：0笔</p>
+                    <p class="item">七天退换</p>
+                </van-row>
+            </div>
             <van-row
                 v-else
                 van-row
@@ -57,19 +65,19 @@
             </van-row>
         </skeleton>
         <ul class="data">
-            <skeleton :loading="!details.title" class="skeleton" :row="4">
+            <Skeleton :loading="!details.title" class="skeleton" :row="4">
                 <!-- <li class="item"><span class="lable">剩余</span>{{ details.price ? 3 : 400 }}件</li> -->
                 <li class="item" @click="isShowSku = true">
                     <span class="lable">尺码</span
                     ><van-icon class="arrow" name="arrow" />
                 </li>
                 <li class="item">
-                    <span class="lable">保障</span>付款2天内发货
+                    <span class="lable">保障</span>付款3天内发货
                 </li>
                 <li class="item">
                     <span class="lable">活动</span>全场8折&nbsp;•&nbsp;限时包邮
                 </li>
-            </skeleton>
+            </Skeleton>
         </ul>
         <div class="member-box">
             <div class="member">
@@ -77,7 +85,7 @@
                     ><img src="../assets/my-banner.jpeg" alt=""
                 /></router-link>
             </div>
-            <van-row
+            <!-- <van-row
                 type="flex"
                 justify="space-between"
                 align="center"
@@ -87,25 +95,34 @@
                 <p class="item">•&nbsp;全场免邮</p>
                 <p class="item">•&nbsp;极速发货</p>
                 <p class="item">•&nbsp;七天退换</p>
-            </van-row>
+            </van-row> -->
         </div>
-        <div class="evaluation">
-            <p class="title">商品评价(0)</p>
-            <skeleton
-                :loading="!details.details"
-                class="skeleton"
-                avatar
-                :row="3"
-            >
-                <p class="text">暂无评价</p>
-            </skeleton>
-        </div>
-        <div class="details">
-            <p class="title">商品详情</p>
-            <skeleton :loading="!details.details" class="skeleton" :row="5">
-                <div id="html" ref="html" v-html="details.details"></div>
-            </skeleton>
-        </div>
+        <van-row type="flex" justify="space-between" align="center" >
+            <Tabs v-model="active" class="tabs">
+                <Tab title="商品详情">
+                    <div class="details">
+                        <!-- <p class="title">商品详情</p> -->
+                        <skeleton :loading="!details.details" class="skeleton" :row="5">
+                            <div id="html" ref="html" v-html="details.details"></div>
+                        </skeleton>
+                    </div>
+                </Tab>
+                <Tab title="商品评价(0)">
+                    <div class="evaluation">
+                        <!-- <p class="title">商品评价</p> -->
+                        <skeleton
+                            :loading="!details.details"
+                            class="skeleton"
+                            avatar
+                            :row="3"
+                        >
+                            <div class="img"><img src="../assets/no-news.png" alt=""></div>
+                            <p class="text">暂无评价</p>
+                        </skeleton>
+                    </div>
+                </Tab>
+            </Tabs>
+        </van-row>
         <goods-action>
             <!-- <goods-action-icon icon="chat-o" text="客服" @click="onClickIcon" /> -->
             <goods-action-icon icon="cart-o" text="购物车" to="/Cart" />
@@ -118,11 +135,13 @@
                 <goods-action-button
                     type="warning"
                     text="加入购物车"
+                    color="linear-gradient(133deg, #ffc05a 0%, #ffad46 100%)"
                     @click="isShowSku = true"
                 />
                 <goods-action-button
                     type="danger"
                     text="立即购买"
+                    color="linear-gradient(135deg, #ffb990 0%, #ff3241 100%)"
                     @click="isShowSku = true"
                 />
             </template>
@@ -146,7 +165,7 @@
 </template>
 
 <script>
-import { Swipe, SwipeItem, GoodsAction, GoodsActionIcon, GoodsActionButton, Skeleton, Sku } from 'vant'
+import { Swipe, SwipeItem, GoodsAction, GoodsActionIcon, GoodsActionButton, Skeleton, Sku, Tab, Tabs } from 'vant'
 import { getUserData, addCart, addOrder, doExchange } from '../services'
 import Star from '../components/star'
 import AV from 'leancloud-storage'
@@ -161,12 +180,15 @@ export default {
         GoodsActionButton,
         Skeleton,
         Sku,
-        Star
+        Star,
+        Tab,
+        Tabs
     },
     data () {
         return {
+            active: 0,
             current: 0,
-            isShowSku: false,
+            isShowSku: this.$route.query.cart,
             details: {},
             id: this.$route.params.id,
             price: this.$route.query.price
@@ -324,11 +346,11 @@ export default {
         }
     }
     .van-nav-bar .van-icon {
-        padding: 5px;
-        font-size: 40px;
-        color: #fff;
-        background: rgb(0, 0, 0, 0.4);
-        border-radius: 50%;
+        // padding: 5px;
+        // font-size: 40px;
+        // color: #fff;
+        // background: rgb(0, 0, 0, 0.4);
+        // border-radius: 50%;
     }
 }
 </style>
@@ -362,19 +384,20 @@ export default {
         }
     }
     .title-pire {
-        padding: 10px 20px 20px;
+        padding: 30px;
         background: #fff;
         // line-height: 1.5;
         .title {
-            width: 560px;
+            // width: 560px;
             font-size: 32px;
-            color: #121314;
+            color: #1d1d1d;
         }
         .pire {
-            text-align: center;
-            font-size: 40px;
+            margin-top: 20px;
+            // text-align: center;
+            font-size: 42px;
             line-height: 1;
-            color: #121314;
+            color: #ff2c3a;
         }
         .original-price {
             font-size: 28px;
@@ -384,19 +407,24 @@ export default {
     }
     .tap {
         height: 50px;
-        margin: 0 32px;
-        padding: 0 25px;
-        background-color: #fff;
+        margin-top: 10px;
+        // margin: 0 32px;
+        // padding: 0 25px;
+        // background-color: #999;
         border-radius: 8px;
         font-size: 24px;
-        color: #121212;
+        color: #999;
         line-height: 50px;
         .item {
             position: relative;
             padding-left: 15px;
         }
     }
+    .tabs {
+        width: 100%;
+    }
     .details {
+        width: 100%;
         height: 0px;
         background: #fff;
         .title {
@@ -440,8 +468,8 @@ export default {
         }
     }
     .evaluation {
-        padding: 25px 20px;
-        background: #fff;
+        padding: 25px 20px 40px;
+        // background: #fff;
         .title {
             font-size: 32px;
             padding-bottom: 25px;
@@ -450,9 +478,17 @@ export default {
         }
         .text {
             margin-top: 20px;
+            margin-bottom: 100px;
             font-size: 28px;
             color: #888;
             text-align: center;
+        }
+        .img {
+            width: 300px;
+            margin: 100px auto 0px;
+            img {
+                width: 100%;
+            }
         }
     }
     .spike {
@@ -511,6 +547,9 @@ export default {
             //     border-radius: 5px;
             // }
         }
+    }
+    .van-goods-action {
+        z-index: 2;
     }
 }
 </style>

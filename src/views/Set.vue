@@ -3,11 +3,11 @@
         <van-nav-bar fixed left-arrow @click-left="$router.go(-1)" placeholder title="设置" />
         <cell-group>
             <cell title="问题反馈" icon="service-o" to="/feedback" is-link />
-            <cell title="检查更新" icon="replay" @click="Update" is-link />
-            <!-- <cell title="修改密码" to="/password-reset" is-link /> -->
-            <cell title="用户协议" icon="coupon-o" to="/agreement" is-link />
-            <cell title="隐私政策" icon="bag-o" to="/privacy" is-link />
-            <cell title="删除账号" icon="warn-o" @click="showDialog" />
+            <!-- <cell title="检查更新" icon="replay" @click="Update" is-link /> -->
+            <cell title="修改密码" icon="replay" to="/password-reset" is-link />
+            <!-- <cell title="用户协议" icon="coupon-o" to="/agreement" is-link />
+            <cell title="隐私政策" icon="bag-o" to="/privacy" is-link /> -->
+            <cell title="注销账号" icon="warn-o" @click="showDialog" />
         </cell-group>
         <div class="button"><Button @click="logOut" round block>退出登陆</Button></div>
     </div>

@@ -61,7 +61,7 @@ export default {
     }
     .van-tabbar-item--active {
         .van-tabbar-item__text {
-            color: #313635;
+            color: #ff202c;
         }
     }
 }

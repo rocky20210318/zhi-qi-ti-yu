@@ -3,18 +3,23 @@
         <van-nav-bar fixed left-arrow @click-left="$router.go(-1)" placeholder title="订单确认" />
         <div class="content">
             <div class="address-wrap">
-                    <van-row type="flex" justify="space-between" align="center" @click.native="addressClick">
-                        <van-icon name="map-marked" size="38" class="location-img" color="#313635" />
-                        <div v-if="addressInfo" class="information" >
-                            <div>
-                                <span class="name">{{ addressInfo.name }}</span>
-                                <span class="phone">{{ addressInfo.tel }}</span>
-                            </div>
-                            <div class="address">{{ `${addressInfo.province} ${addressInfo.city} ${addressInfo.county} ${addressInfo.addressDetail}` }}</div>
+                <van-row type="flex" justify="space-between" align="center" @click.native="addressClick">
+                    <van-icon name="map-marked" size="38" class="location-img" color="#ffb990" />
+                    <div v-if="addressInfo" class="information" >
+                        <div>
+                            <span class="name">{{ addressInfo.name }}</span>
+                            <span class="phone">{{ addressInfo.tel }}</span>
                         </div>
-                        <div class="text" v-else>点击填写收货地址</div>
-                    </van-row>
-                </div>
+                        <div class="address">{{ `${addressInfo.province} ${addressInfo.city} ${addressInfo.county} ${addressInfo.addressDetail}` }}</div>
+                    </div>
+                    <div class="text" v-else>点击填写收货地址</div>
+                </van-row>
+            </div>
+            <div class="address-wrap">
+                <router-link to="/my-receive" class="information coupon">
+                    <div>暂无可使用优惠券</div>
+                </router-link>
+            </div>
             <ul class="book-list">
                 <li
                     v-for="(item, index) in data"
@@ -22,7 +27,7 @@
                     >
                         <van-row type="flex" justify="space-between" align="center" class="book-detail">
                             <img :src="item.commodity.thumbnail">
-                            <div>
+                            <div class="right">
                                 <h5 class="van-multi-ellipsis--l2">{{ item.commodity.title }}</h5>
                                 <van-row type="flex" justify="space-between" align="center">
                                     <p class="amount">¥{{ item.commodity.price }}</p>
@@ -35,11 +40,11 @@
                         </van-row>
                     </li>
             </ul>
-            <div class="address-wrap">
+            <!-- <div class="address-wrap">
                 <div class="information coupon">
                     <div >暂无可使用优惠券</div>
                 </div>
-            </div>
+            </div> -->
         </div>
         <footer>
             <van-row type="flex" justify="space-between" align="center" class="footer-wrap">
@@ -110,7 +115,7 @@ export default {
         handleBuy () {
             if (this.addressInfo) {
                 console.log(AV.User.current().attributes.mobilePhoneNumber)
-                if (AV.User.current().attributes.mobilePhoneNumber === '15902173921') {
+                if (AV.User.current().attributes.mobilePhoneNumber === '13789218201') {
                     ConfirmOrder(this.$route.params.id)
                     const bookNames = this.data.map((item) => item.commodity.title).join(',')
                     updateAddressBooks(this.addressInfo.objectId, bookNames)
@@ -216,6 +221,9 @@ $footer-height: 58px * 2;
       margin-bottom: 90px;
       font-weight: 400;
     }
+    .right {
+        flex: 1;
+    }
     .author {
       white-space: nowrap;
       overflow: hidden;
@@ -259,11 +267,11 @@ $footer-height: 58px * 2;
     width: 124px * 2;
     height: 41px * 2;
     line-height: 41px * 2;
-    background: linear-gradient(45deg,#fcd755 0%,#d81e06 100%);
+    background: linear-gradient(135deg, #ffb990 0%,#ff3241 100%);
     color: #fff;
     font-size: 18px * 2;
     text-align: center;
-    border-radius: 4px;
+    border-radius: 12px;
   }
 }
 .modal {

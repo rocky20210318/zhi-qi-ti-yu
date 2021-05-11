@@ -11,15 +11,15 @@
                 :class="['checkbox', { 'is-checked': isChecked }]"
                 @click="handleItemClick"
             />
-            <van-icon name="delete" size="20px" @click="handleRemove" />
+            <van-icon name="delete" size="20px" color="#e8e8e8" @click="handleRemove" />
         </van-row>
-        <div
+        <!-- <div
             v-if="!$parent.canHandle"
             class="order-status"
             :style="{ color: statusColor }"
         >
             {{ status === 0 ? '待付款' : '待发货' }}
-        </div>
+        </div> -->
         <van-row
             type="flex"
             justify="space-between"
@@ -178,6 +178,7 @@ export default {
         margin-bottom: 20px;
     }
     .book-detail {
+        // flex-wrap: nowrap;
         .img {
             width: 220px;
             height: 220px;

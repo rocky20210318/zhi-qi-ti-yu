@@ -1,72 +1,71 @@
 <template>
     <div id="login">
-        <div class="firStep">
-            <van-nav-bar
-                :border="false"
-                @click-left="$router.history.go(-1)"
-                placeholder
-                left-arrow
-            />
-            <div class="content">
-                <h1>重制密码</h1>
-                <div class="content-inner">
-                    <div class="label-input">
-                        <label class="label">账号</label>
-                        <field
-                            placeholder="请输入手机号码"
-                            type="tel"
-                            v-model="phoneNumber"
-                            clearable
-                        />
-                    </div>
-                    <div class="label-input">
-                        <label class="label">验证码</label>
-                        <field
-                            type="tel"
-                            placeholder="请输入验证码"
-                            v-model="smsCode"
-                            clearable
-                        >
-                            <template #button>
-                                <Button
-                                    :loading="smsCodeLoading"
-                                    :disabled="startCountdown"
-                                    loading-text="发送中"
-                                    @click="getSmsCode"
-                                    color="#313635"
-                                    size="small"
-                                    type="primary"
-                                >
-                                    <template v-if="!startCountdown">获取验证码</template>
-                                    <template v-else><count-down class="count-down" :time="60 * 1000" @finish="startCountdown = false" format='ss秒重新获取' /></template>
-                                </Button>
-                            </template>
-                        </field>
-                    </div>
-                    <div class="label-input">
-                        <label class="label">新密码密码</label>
-                        <Field
-                            :type="inputTypeCon"
-                            placeholder="输入8-16位英文与字母构成的密码"
-                            v-model="valuePwd"
-                        />
-                    </div>
+        <van-nav-bar
+            :border="false"
+            @click-left="$router.history.go(-1)"
+            placeholder
+            left-arrow
+        />
+        <div class="content">
+            <!-- <h1>重制密码</h1> -->
+            <div class="content-inner">
+                <img src="../assets/login-img-1.png" class="img-bg">
+                <div class="label-input">
+                    <label class="label">账号</label>
+                    <field
+                        placeholder="请输入手机号码"
+                        type="tel"
+                        v-model="phoneNumber"
+                        clearable
+                    />
                 </div>
-                <Button
-                    color="#313635"
-                    :disabled="!(phoneTest && valuePwd)"
-                    @click="submitButton"
-                    :loading="loginLoading"
-                    loading-text="登陆中"
-                    block
-                    type="primary"
-                    class="button">重制密码</Button>
-                <!-- <p class="tipsBox">登录/注册表示同意<span class="privacy">《用户服务协议》</span></p> -->
-                <van-row type="flex" align="center" justify="center" class="tipsBox">
-                    <checkbox v-model="checked" checked-color="#313635" icon-size="0.38rem" class="checkbox" />
-                    <p>我已阅读并同意<router-link class="privacy" to="/privacy">《隐私政策》</router-link>与<router-link class="privacy" to="/agreement">《用户协议》</router-link></p>
-                </van-row>
+                <div class="label-input">
+                    <label class="label">验证码</label>
+                    <field
+                        type="tel"
+                        placeholder="请输入验证码"
+                        v-model="smsCode"
+                        clearable
+                    >
+                        <template #button>
+                            <Button
+                                :loading="smsCodeLoading"
+                                :disabled="startCountdown"
+                                loading-text="发送中"
+                                @click="getSmsCode"
+                                color="linear-gradient(135deg, #ffb990 0%,#ff3241 100%)"
+                                size="small"
+                                type="primary"
+                            >
+                                <template v-if="!startCountdown">获取验证码</template>
+                                <template v-else><count-down class="count-down" :time="60 * 1000" @finish="startCountdown = false" format='ss秒重新获取' /></template>
+                            </Button>
+                        </template>
+                    </field>
+                </div>
+                <div class="label-input">
+                    <label class="label">新密码密码</label>
+                    <Field
+                        :type="inputTypeCon"
+                        placeholder="输入8-16位英文与字母构成的密码"
+                        v-model="valuePwd"
+                    />
+                </div>
             </div>
+            <Button
+                color="linear-gradient(135deg, #ffb990 0%,#ff3241 100%)"
+                :disabled="!(phoneTest && valuePwd)"
+                @click="submitButton"
+                :loading="loginLoading"
+                loading-text="登陆中"
+                block
+                type="primary"
+                class="button">重制密码</Button>
+            <!-- <p class="tipsBox">登录/注册表示同意<span class="privacy">《用户服务协议》</span></p> -->
+            <van-row type="flex" align="center" justify="center" class="tipsBox">
+                <checkbox v-model="checked" checked-color="linear-gradient(135deg, #ffb990 0%,#ff3241 100%)" icon-size="0.38rem" class="checkbox" />
+                <p>我已阅读并同意<router-link class="privacy" to="/privacy">《隐私政策》</router-link>与<router-link class="privacy" to="/agreement">《用户协议》</router-link></p>
+            </van-row>
         </div>
     </div>
 </template>
@@ -155,17 +154,28 @@ export default {
 <style scoped lang="scss">
 #login{
     height: 100%;
-    background: url('../assets/login-bg.jpg') no-repeat;
-    background-size: 100% 100%;
+    background: url('../assets/login-bg.png') no-repeat;
+    background-size: 100% auto;
     // padding-left: 20px;
     // padding-right: 20px;
 }
 .content {
-    margin: 240px 47px 100px;
+    position: relative;
+    height: 60%;
+    margin: 300px 30px 100px;
     background-color: #ffffff;
-    box-shadow: 0px 20px 20px 0pxrgba(0, 0, 0, 0.08);
-    border-radius: 13px;
-    padding: 37px 65px;
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.12);
+    border-radius: 20px;
+    padding: 140px 45px 0px;
+    .img-bg {
+        position: absolute;
+        top: -248px;
+        z-index: 2;
+        left: 0;
+        right: 0;
+        width: 453px;
+        margin: auto;
+    }
 }
 h1 {
     margin-bottom: 90px;

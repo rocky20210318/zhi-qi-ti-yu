@@ -88,10 +88,10 @@ export default {
 <style lang="scss">
 #search {
     .van-search__action {
-        color: #fff;
+        // color: #fff;
     }
     .van-dropdown-menu__bar {
-        background: #fff;
+        // background: #fff;
     }
     .van-dropdown-menu__title {
         // color: #fff;
@@ -101,9 +101,10 @@ export default {
 <style lang="scss" scoped>
 #search {
     .nav {
-        background: linear-gradient(90deg,#fcd755 0%,#d81e06 100%);
+        background: #fff;
         .icon {
             margin-left: 20px;
+            color: #000!important;
         }
         .search {
             flex: 1;

@@ -8,7 +8,7 @@
                 class="top-background"
             >
                 <div color="light" class="title">购物车</div>
-                <div class="count">共{{ totalCount }}件宝贝</div>
+                <!-- <div class="count">共{{ totalCount }}件宝贝</div> -->
             </van-row>
             <book-large-list
                 v-if="cartList.length"
@@ -24,11 +24,8 @@
             </book-large-list>
             <div v-else>
                 <div class="cart-no-data">
-                    <img
-                        src="https://img.yzcdn.cn/vant/custom-empty-image.png"
-                        width="100%"
-                        class="cart-no-data-img"
-                    />
+                    <img src="../assets/custom-empty-image.png" class="cart-no-data-img" />
+                    <p class="no-data-text-1">您的购物车是空的！</p>
                 </div>
             </div>
         </div>
@@ -40,7 +37,7 @@
                 class="footer-wrap"
             >
                 <span class="totals">¥{{ total }}</span>
-                <a class="buy-btn" @click="handleBuy">立即购买</a>
+                <a class="buy-btn" @click="handleBuy">立即购买({{ chooseData.length }})</a>
             </van-row>
         </footer>
         <basic-footer />
@@ -147,14 +144,15 @@ $footer-height: 58px * 2;
 }
 .top-background {
     margin-top: -80px;
-    padding: 90px 34px 38px;
-    height: 328px;
-    //   background-image: url(../assets/cart-bg.png);
-    background: linear-gradient(180deg, #fcd755 0%, #d81e06 100%);
+    padding: 23px 34px 38px;
+    height: 340px;
+    background: url('../assets/cart-bg.png')no-repeat;
+    background-size: 100%;
+    // background: linear-gradient(180deg, #fcd755 0%, #d81e06 100%);
     box-sizing: border-box;
     color: #ffffff;
     .title {
-        font-size: 48px;
+        font-size: 36px;
     }
     .count {
         font-size: 14px * 2;
@@ -176,37 +174,41 @@ $footer-height: 58px * 2;
     .totals {
         font-size: 24px * 2;
         font-weight: 500;
-        color: #d0021b;
+        color: #ff202c;
     }
     .buy-btn {
         width: 124px * 2;
         height: 41px * 2;
         line-height: 41px * 2;
-        background: linear-gradient(180deg, #fcd755 0%, #d81e06 100%);
+        background: linear-gradient(135deg, #ffb990 0%, #ff3241 100%);
         color: #fff;
         font-size: 18px * 2;
         text-align: center;
-        border-radius: 41px;
+        border-radius: 10px;
     }
 }
 .cart-no-data {
     position: relative;
-}
-.cart-no-data-img {
-    display: block;
-    margin: 20px auto 44px;
-    width: 350px;
-    height: 310px;
-}
-.no-data-text-1 {
-    position: absolute;
-    bottom: 10px;
-    left: 0;
-    right: 0;
-    font-size: 28px;
-    color: #666;
-    text-align: center;
-    letter-spacing: 0.3px;
+    top: -120px;
+    margin: 0 30px;
+    padding-top: 180px;
+    height: 750px;
+    background-color: #ffffff;
+    box-shadow: 0px 8px 40px 0px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    .cart-no-data-img {
+        display: block;
+        // margin: 20px auto 44px;
+        width: 60%;
+        margin: 0 auto 20px;
+        // width: 350px;
+        // height: 310px;
+    }
+    .no-data-text-1 {
+        font-size: 28px;
+        color: #111;
+        text-align: center;
+    }
 }
 .maybe-like {
     width: 80%;

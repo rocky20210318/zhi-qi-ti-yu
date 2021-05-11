@@ -760,6 +760,22 @@ export function getOrderList (status) {
     return data
 }
 
+// 已领取优惠卷列表
+export function getCouponsList (data) {
+    const userId = AV.User.current().id
+    let couponsList = localStorage.getItem('couponsList-' + userId)
+    couponsList = couponsList ? JSON.parse(couponsList) : []
+    return couponsList
+}
+
+// 领取优惠卷
+export function getCoupons (data) {
+    const userId = AV.User.current().id
+    const couponsList = getCouponsList()
+    couponsList.push(data)
+    localStorage.setItem('couponsList-' + userId, JSON.stringify(couponsList))
+}
+
 // 执行组合排列的函数
 export function doExchange (array) {
     var len = array.length
