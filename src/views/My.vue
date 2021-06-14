@@ -1,11 +1,11 @@
 <template>
     <div id="my">
         <div class="user-data">
-            <van-row type="flex" align="center" justify="space-between" class="">
+            <!-- <van-row type="flex" align="center" justify="space-between" class="">
                 <p class="title">我的</p>
                 <router-link to="/message-list"><van-icon name="comment-o" size=".65rem" color="#fff" class="comment-o" /></router-link>
-            </van-row>
-            <van-row type="flex" align="center">
+            </van-row> -->
+            <van-row type="flex" align="center" class="img-name">
                 <div>
                     <img v-if="!userData.userImage" class="user-img" src="../assets/user-category-avatar.png" alt="">
                     <img v-else class="user-img" :src="userData.userImage" alt="">
@@ -13,17 +13,16 @@
                 <router-link v-if="!userData.username" class="user-name" to="/login">登陆/注册</router-link>
                 <template v-else>
                     <router-link to="/edit-user">
-                        <p class="user-name">{{ userData.username }}<van-icon color="#eee" size="16px" name="edit" class="icon" /></p>
-                        <!-- <div class="vip">
+                        <p class="user-name">{{ userData.username }}</p>
+                        <div class="vip">
                             <span>{{ userData.remarks || '点击编辑' }}</span>
                             <van-icon color="#eee" size="16px" name="edit" class="icon" />
-                            <Button size="mini" color="linear-gradient(180deg,#fcd755 0%,#d81e06 100%)" class="button" to="member">点击编辑</Button>
-                        </div> -->
+                        </div>
                     </router-link>
                     <!-- <router-link to="/edit-user"><van-icon class="edit" size="24px" name="edit" /></router-link> -->
                 </template>
             </van-row>
-            <van-row type="flex" align="center" justify="space-between" class="coupon">
+            <!-- <van-row type="flex" align="center" justify="space-between" class="coupon">
                 <div>
                     <van-row type="flex" align="center" justify="space-between" class="title">
                         <van-icon size="0.5rem" name="refund-o" class="icon" />
@@ -32,8 +31,24 @@
                     <p class="quantity"><span class="nub">{{ collectionNub }}</span>张</p>
                 </div>
                 <router-link to="/my-receive" class="button">查看</router-link>
-            </van-row>
+            </van-row> -->
+            <NoticeBar left-icon="volume-o" color="#4E3926" background="rgba(250, 250, 250, 0)" text="即刻开通超级会员，每日享受折上折，更有特权礼品免费拿   "></NoticeBar>
+            <router-link to="/" class="member-link"><img src="../assets/member-link.png" alt=""></router-link>
         </div>
+        <van-row type="flex" justify="center" align="center" class="coupon-integral">
+            <router-link to="" class="item">
+                <p class="nub">0</p>
+                <p class="title">积分</p>
+            </router-link>
+            <router-link to="/my-receive" class="item">
+                <p class="nub">0</p>
+                <p class="title">优惠卷</p>
+            </router-link>
+            <router-link to="/message-list" class="item">
+                <p class="nub">0</p>
+                <p class="title">消息</p>
+            </router-link>
+        </van-row>
         <div class="order">
             <van-row class="top" type="flex" justify="space-between" align="bottom">
                 <p class="title">我的订单</p>
@@ -41,20 +56,24 @@
             </van-row>
             <van-row type="flex" justify="space-around" align="center">
                 <router-link to="/order-list?showType=1">
-                    <div class="img"><img src="../assets/daifukuan.png" alt=""></div>
+                    <div class="img"><img src="../assets/my-order-icon-1.png" alt=""></div>
                     <p class="text">待付款</p>
                 </router-link>
                 <router-link to="/order-list?showType=2">
-                    <div class="img"><img src="../assets/daifahuo-2.png" alt=""></div>
+                    <div class="img"><img src="../assets/my-order-icon-2.png" alt=""></div>
                     <p class="text">待发货</p>
                 </router-link>
                 <router-link to="/order-list?showType=3">
-                    <div class="img"><img src="../assets/daifahuo.png" alt=""></div>
+                    <div class="img"><img src="../assets/my-order-icon-3.png" alt=""></div>
                     <p class="text">待收货</p>
                 </router-link>
                 <router-link to="/order-list?showType=4">
-                    <div class="img"><img src="../assets/daipingjia-2.png" alt=""></div>
+                    <div class="img"><img src="../assets/my-order-icon-4.png" alt=""></div>
                     <p class="text">待评价</p>
+                </router-link>
+                <router-link to="/order-list?showType=4">
+                    <div class="img"><img src="../assets/my-order-icon-5.png" alt=""></div>
+                    <p class="text">售后</p>
                 </router-link>
             </van-row>
         </div>
@@ -100,7 +119,7 @@
 </template>
 
 <script>
-import { Cell, CellGroup, Dialog } from 'vant'
+import { Cell, CellGroup, Dialog, NoticeBar } from 'vant'
 import { logOut, getCouponsList } from '../services'
 import AV from 'leancloud-storage'
 
@@ -109,6 +128,7 @@ export default {
     components: {
         Cell,
         CellGroup,
+        NoticeBar,
         [Dialog.Component.name]: Dialog.Component
     },
     data () {
@@ -125,7 +145,6 @@ export default {
     },
     async created () {
         await this.getUserData()
-        // console.log(getCouponsList())
         this.collectionNub = getCouponsList().length
     },
     mounted () {
@@ -158,7 +177,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 #my {
-    padding: 0 24px;
+    // padding: 0 24px;
     .setting {
         margin-top: 10px;
         float: right;
@@ -173,16 +192,23 @@ export default {
         }
     }
     .user-data {
-        height: 476px;
-        margin: 0 -24px;
-        padding: 0 36px;
+        position: relative;
+        z-index: 2;
+        height: 416px;
+        // margin: 0 -24px;
+        padding: 72px 36px 0;
         box-sizing: border-box;
-        background: url('../assets/my-top-bg.png') no-repeat;
+        background: url('https://lanhu.oss-cn-beijing.aliyuncs.com/SketchPng8eebcec8fcc05480c361fa1d5274349bc25fb2c4cb8c8d6d271e9b659d5dd73c') no-repeat;
+        // background: linear-gradient(45deg, #90B8FF 0%, #1864FF 100%);
         background-size: 100% auto;
+        overflow: hidden;
         .title {
             padding: 30px 0 30px;
             font-size: 36px;
             color: #fff;
+        }
+        .img-name {
+            margin-bottom: 56px;
         }
         .user-img {
             width: 120px;
@@ -251,16 +277,59 @@ export default {
                 font-weight: 700;
             }
         }
+        .member-link {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            display: block;
+            width: 690px;
+            margin: auto;
+            img {
+                width: 100%;
+            }
+        }
+    }
+    .coupon-integral {
+        position: relative;
+        z-index: 1;
+        top: -30px;
+        margin: 0 -24px;
+        padding: 69px 0 36px;
+        background: #fff;
+        text-align: center;
+        font-size: 24px;
+        color: #888;
+        > .item {
+            position: relative;
+            padding: 0 90px;
+            .nub {
+                font-size: 40px;
+                color: #272A33;
+            }
+            &:nth-child(n+2)::after {
+                content: " ";
+                position: absolute;
+                left: 0;
+                bottom: 20px;
+                display: block;
+                width: 2px;
+                height: 42px;
+                background: #e1e1ee;
+                margin: auto;
+            }
+        }
+
     }
     .order {
-        margin: 0px 0 20px;
-        padding-bottom: 25px;
-        box-shadow: 0px 8px 40px 0px rgba(0, 0, 0, 0.1);
-        border-radius: 20px;
+        margin: 0px 0 30px;
+        // padding-bottom: 25px;
+        // box-shadow: 0px 8px 40px 0px rgba(0, 0, 0, 0.1);
+        // border-radius: 20px;
         background-color: #ffffff;
         // border-radius: 8px;
         .top {
-            padding: 40px 40px 0px 40px;
+            padding: 30px 30px 0px 30px;
         }
         .title {
             font-size: 36px;
@@ -268,7 +337,7 @@ export default {
         }
         .all-order {
             font-size: 28px;
-            color: #888;
+            color: #3578FF;
         }
         .icon {
             position: relative;
@@ -282,14 +351,15 @@ export default {
             // margin-bottom: 20px;
         }
         img {
-            max-width: 150px;
+            max-width: 110px;
             // min-height: 48px;
             vertical-align: middle;
         }
         .text {
             position: relative;
-            top: -40px;
+            top: -16px;
             text-align: center;
+            color: #888;
         }
     }
     .banner {
@@ -305,8 +375,8 @@ export default {
     .features {
         margin: 20px 0 30px;
         background-color: #ffffff;
-        box-shadow: 0px 8px 40px 0px rgba(0, 0, 0, 0.1);
-        border-radius: 20px;
+        // box-shadow: 0px 8px 40px 0px rgba(0, 0, 0, 0.1);
+        // border-radius: 20px;
         overflow: hidden;
         .grid {
             // padding: 0 40px;

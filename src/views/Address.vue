@@ -77,11 +77,11 @@ export default {
 #address {
     // height: 100%;
     .van-button--danger {
-        background: linear-gradient(135deg, #ffb990 0%, #ff3241 100%);
+        background: linear-gradient(45deg, #90B8FF 0%, #1864FF 100%);
         border: 0;
     }
     .van-switch--on {
-        background: linear-gradient(135deg, #ffb990 0%, #ff3241 100%);
+        background: linear-gradient(45deg, #90B8FF 0%, #1864FF 100%);
     }
 }
 </style>

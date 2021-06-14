@@ -40,7 +40,7 @@
                     <p class="price"><span>{{ item.price }}</span>元</p>
                     <div class="data">
                         <p class="title">{{ item.price }}元优惠券</p>
-                        <p class="time">2021.06.01-2021.06.04</p>
+                        <p class="time">2021.06.04-2021.06.07</p>
                     </div>
                     <div v-if="!item.isReceive" class="button" @click="receive(item)">领取</div>
                     <div v-else class="button">已领取</div>
@@ -75,26 +75,20 @@ export default {
             const listData = [
                 {
                     id: 1,
-                    price: 40,
-                    condition: 199,
+                    price: 20,
+                    condition: 200,
                     isReceive: false
                 },
                 {
                     id: 2,
-                    price: 80,
-                    condition: 399,
+                    price: 50,
+                    condition: 300,
                     isReceive: false
                 },
                 {
                     id: 3,
-                    price: 130,
-                    condition: 599,
-                    isReceive: false
-                },
-                {
-                    id: 4,
-                    price: 200,
-                    condition: 899,
+                    price: 120,
+                    condition: 500,
                     isReceive: false
                 }
             ]

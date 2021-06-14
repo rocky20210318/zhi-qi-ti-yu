@@ -13,15 +13,21 @@
                 </template>
                 <span>分类</span>
             </tabbar-item>
-            <tabbar-item to="/cart">
+            <tabbar-item to="/member">
                 <template #icon="props">
                     <img class="icon-img" :src="props.active ? require('../../assets/icon-home-tab-3-active.png') : require('../../assets/icon-home-tab-3.png')" />
+                </template>
+                <span>会员</span>
+            </tabbar-item>
+            <tabbar-item to="/cart">
+                <template #icon="props">
+                    <img class="icon-img" :src="props.active ? require('../../assets/icon-home-tab-4-active.png') : require('../../assets/icon-home-tab-4.png')" />
                 </template>
                 <span>购物车</span>
             </tabbar-item>
             <tabbar-item to="/my">
                 <template #icon="props">
-                    <img class="icon-img" :src="props.active ? require('../../assets/icon-home-tab-4-active.png') : require('../../assets/icon-home-tab-4.png')" />
+                    <img class="icon-img" :src="props.active ? require('../../assets/icon-home-tab-5-active.png') : require('../../assets/icon-home-tab-5.png')" />
                 </template>
                 <span>我的</span>
             </tabbar-item>
@@ -61,7 +67,7 @@ export default {
     }
     .van-tabbar-item--active {
         .van-tabbar-item__text {
-            color: #ff202c;
+            color: #3377FF;
         }
     }
 }

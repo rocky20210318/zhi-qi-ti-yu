@@ -1,8 +1,8 @@
 <template>
     <div id="member">
-        <van-nav-bar class="nav" :border="false" title="开通会员" fixed left-arrow placeholder @click-left="$router.go(-1)"/>
+        <van-nav-bar class="nav" :border="false" title="开通会员" fixed  placeholder />
         <div class="top-bg">
-            <h1 class="">会员1元抢购专场</h1>
+            <h1 class="">会员抢购专场</h1>
             <h3>更多优惠等你拿</h3>
         </div>
         <p class="title"><span>超级会员权益</span></p>
@@ -40,7 +40,7 @@
                     <p class="text">专属客服</p>
             </grid-item>
         </grid>
-        <div class="button"><Button size="large" color="#313635" @click="isShowPayMethod = true" class="">188元即刻开通</Button></div>
+        <div class="button"><Button size="large" color="linear-gradient(45deg, #90B8FF 0%, #1864FF 100%)" @click="$router.push('/pay-list')" class="">88元即刻开通</Button></div>
         <div v-show="isShowPayMethod" class="payMethod" @click="isShowPayMethod = false">
             <ul class="payList">
                 <!-- <li><p class="">支付宝信支付正在接入中</p></li> -->
@@ -48,6 +48,7 @@
                 <li><router-link to="/credit-card"><img src="../assets/xinyongka.png">信用卡</router-link></li>
             </ul>
         </div>
+        <basic-footer />
     </div>
 </template>
 

@@ -11,10 +11,7 @@
             finished-text="没有更多了"
             @load="onLoad"
         >
-            <van-row
-                type="flex"
-                justify="space-between"
-                align="center"
+            <div
                 class="list"
             >
                 <item
@@ -23,7 +20,7 @@
                     :details="item"
                     class="item"
                 />
-            </van-row>
+            </div>
         </list>
     </pull-refresh>
 </template>
@@ -75,7 +72,7 @@ export default {
             isRefreshLoading: false,
             finished: false,
             pageIndex: 0,
-            pageSize: 10
+            pageSize: 20
         }
     },
     computed: {
@@ -136,6 +133,7 @@ export default {
             articleList.skip((index - 1) * size)
             articleList.limit(size)
             articleList.contains('title', this.keys)
+            articleList.descending('createdAt')
             this.queryFun(articleList)
             // console.log(this.queryFun)
             const listData = await articleList.find()
@@ -156,7 +154,8 @@ export default {
     //     margin-right: 30px;
     // }
     .item {
-        margin-bottom: 20px;
+        padding: 30px 10px;
+        border-bottom: 1px solid #eee;
     }
 }
 </style>

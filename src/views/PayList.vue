@@ -19,9 +19,14 @@
             </cell> -->
             <cell value="去绑定" is-link to="/credit-card">
                 <template #title>
-                    <van-icon size="0.5rem" name="credit-pay" /><span class="custom-title">信用卡</span>
+                    <van-icon size="0.6rem" name="credit-pay" /><span class="custom-title">银行卡</span>
                 </template>
             </cell>
+            <!-- <cell value="去绑定" is-link to="/credit-card">
+                <template #title>
+                    <van-icon size="0.6rem" name="alipay" color="#1E90FF" /><span class="custom-title">支付宝</span>
+                </template>
+            </cell> -->
             <!-- <p class="prompt">即将开通支付宝、微信支付</p> -->
         </div>
     </div>
@@ -68,7 +73,7 @@ export default {
     .van-cell__title .van-icon {
         width: 40px;
         vertical-align: middle;
-        margin-right: 10px;
+        margin-right: 30px;
     }
 }
 </style>

@@ -80,11 +80,11 @@
             </Skeleton>
         </ul>
         <div class="member-box">
-            <div class="member">
+            <!-- <div class="member">
                 <router-link to="/search?keys=软壳衣裤"
                     ><img src="../assets/my-banner.jpeg" alt=""
                 /></router-link>
-            </div>
+            </div> -->
             <!-- <van-row
                 type="flex"
                 justify="space-between"
@@ -141,7 +141,7 @@
                 <goods-action-button
                     type="danger"
                     text="立即购买"
-                    color="linear-gradient(135deg, #ffb990 0%, #ff3241 100%)"
+                    color="linear-gradient(45deg, #90B8FF 0%, #1864FF 100%)"
                     @click="isShowSku = true"
                 />
             </template>

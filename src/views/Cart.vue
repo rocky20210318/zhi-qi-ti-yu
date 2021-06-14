@@ -24,8 +24,8 @@
             </book-large-list>
             <div v-else>
                 <div class="cart-no-data">
-                    <img src="../assets/custom-empty-image.png" class="cart-no-data-img" />
-                    <p class="no-data-text-1">您的购物车是空的！</p>
+                    <img src="../assets/custom-empty-image.webp" class="cart-no-data-img" />
+                    <p class="no-data-text-1">购物车空空如也</p>
                 </div>
             </div>
         </div>
@@ -180,7 +180,7 @@ $footer-height: 58px * 2;
         width: 124px * 2;
         height: 41px * 2;
         line-height: 41px * 2;
-        background: linear-gradient(135deg, #ffb990 0%, #ff3241 100%);
+        background: linear-gradient(45deg, #90B8FF 0%, #1864FF 100%);
         color: #fff;
         font-size: 18px * 2;
         text-align: center;

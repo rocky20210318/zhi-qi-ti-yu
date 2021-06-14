@@ -115,7 +115,7 @@ export default {
         handleBuy () {
             if (this.addressInfo) {
                 console.log(AV.User.current().attributes.mobilePhoneNumber)
-                if (AV.User.current().attributes.mobilePhoneNumber === '13789218201') {
+                if (AV.User.current().attributes.mobilePhoneNumber === '13123456789') {
                     ConfirmOrder(this.$route.params.id)
                     const bookNames = this.data.map((item) => item.commodity.title).join(',')
                     updateAddressBooks(this.addressInfo.objectId, bookNames)
@@ -267,7 +267,7 @@ $footer-height: 58px * 2;
     width: 124px * 2;
     height: 41px * 2;
     line-height: 41px * 2;
-    background: linear-gradient(135deg, #ffb990 0%,#ff3241 100%);
+    background: linear-gradient(45deg, #90B8FF 0%, #1864FF 100%);
     color: #fff;
     font-size: 18px * 2;
     text-align: center;

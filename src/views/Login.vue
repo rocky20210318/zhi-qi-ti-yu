@@ -6,10 +6,12 @@
             placeholder
             left-arrow
         />
+        <img src="../assets/login-bg-1.png" class="bg-1">
+        <img src="../assets/login-bg-2.png" class="bg-2">
         <div class="content">
             <!-- <h1>登陆</h1> -->
             <div class="content-inner">
-                <img src="../assets/login-img-1.png" class="img-bg">
+                <!-- <img src="../assets/login-img-1.png" class="img-bg"> -->
                 <div class="label-input">
                     <!-- <label class="label">账号</label> -->
                     <field
@@ -29,7 +31,7 @@
                 </div>
                 <router-link to="/password-reset" class="forgotPwd">忘记密码?</router-link>
             </div>
-            <Button color="linear-gradient(135deg, #ffb990 0%,#ff3241 100%)"
+            <Button color="linear-gradient(45deg, #90B8FF 0%, #1864FF 100%)"
                 :disabled="!(phoneTest && valuePwd)"
                 @click="submitButton"
                 :loading="loginLoading"
@@ -38,7 +40,7 @@
                 type="primary"
                 class="button">登陆</Button>
             <van-row type="flex" align="center" justify="center" class="tipsBox">
-                <checkbox v-model="checked" checked-color="linear-gradient(135deg, #ffb990 0%,#ff3241 100%)" icon-size="0.38rem" class="checkbox" />
+                <checkbox v-model="checked" checked-color="linear-gradient(45deg, #90B8FF 0%, #1864FF 100%)" icon-size="0.38rem" class="checkbox" />
                 <p>我已阅读并同意<router-link class="privacy" to="/privacy">《隐私政策》</router-link>与<router-link class="privacy" to="/agreement">《用户协议》</router-link></p>
             </van-row>
             <p class="switchPage"><router-link to="/sign-up">注册</router-link></p>
@@ -123,18 +125,32 @@ export default {
 </style>
 <style scoped lang="scss">
 #login{
+    position: relative;
     height: 100%;
-    background: url('../assets/login-bg.png') no-repeat;
-    background-size: 100% auto;
+    background: #fff;
+    // background: url('../assets/login-bg.png') no-repeat;
+    // background-size: 100% auto;
     // padding-left: 20px;
     // padding-right: 20px;
+    .bg-1 {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
+    .bg-2 {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+    }
 }
 .content {
     position: relative;
     height: 60%;
-    margin: 300px 30px 100px;
-    background-color: #ffffff;
-    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.12);
+    margin: 200px 30px 100px;
+    // background-color: #ffffff;
+    // box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.12);
     border-radius: 20px;
     padding: 140px 45px 0px;
     .img-bg {

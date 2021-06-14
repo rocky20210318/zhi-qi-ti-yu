@@ -9,7 +9,7 @@
             <cell title="隐私政策" icon="bag-o" to="/privacy" is-link /> -->
             <cell title="注销账号" icon="warn-o" @click="showDialog" />
         </cell-group>
-        <div class="button"><Button @click="logOut" round block>退出登陆</Button></div>
+        <div class="button"><Button @click="logOut"  round block>退出登陆</Button></div>
     </div>
 </template>
 
