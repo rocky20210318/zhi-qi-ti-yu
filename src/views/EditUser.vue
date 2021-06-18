@@ -17,7 +17,7 @@
         <cell-group>
             <field v-model="userData.remarks" maxlength="15" label="个性签名" placeholder="请输入个性签名" />
         </cell-group>
-        <div class="button"><Button @click="submit" :loading="loading" round block color="linear-gradient(45deg, #90B8FF 0%, #1864FF 100%)">修改</Button></div>
+        <div class="button"><Button @click="submit" :loading="loading" round block color="linear-gradient(45deg, #313635 0%, #888 100%)">修改</Button></div>
     </div>
 </template>
 

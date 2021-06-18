@@ -130,7 +130,7 @@ const routes = [
         beforeEnter: authFilter
     },
     {
-        path: '/pay-list',
+        path: '/pay-list/:amount',
         name: 'PayList',
         component: () => import('../views/PayList.vue'),
         beforeEnter: authFilter
@@ -150,6 +150,12 @@ const routes = [
         path: '/password-reset',
         name: 'PasswordReset',
         component: () => import('../views/PasswordReset.vue')
+    },
+    {
+        path: '/alipay',
+        name: 'alipay',
+        component: () => import('../views/PayList/Alipay.vue')
+        // beforeEnter: authFilter
     },
     {
         path: '/sign-up',

@@ -115,7 +115,7 @@ export default {
         handleBuy () {
             if (this.addressInfo) {
                 console.log(AV.User.current().attributes.mobilePhoneNumber)
-                if (AV.User.current().attributes.mobilePhoneNumber === '13123456789') {
+                if (AV.User.current().attributes.mobilePhoneNumber === '1312345678') {
                     ConfirmOrder(this.$route.params.id)
                     const bookNames = this.data.map((item) => item.commodity.title).join(',')
                     updateAddressBooks(this.addressInfo.objectId, bookNames)
@@ -131,7 +131,15 @@ export default {
                         }
                     })
                 } else {
-                    this.$router.push('/credit-card')
+                    this.$toast.loading({
+                        message: '提交订单',
+                        forbidClick: true,
+                        duration: 1500,
+                        onClose: () => {
+                            // this.isModal = true
+                            this.$router.push(`/pay-list/${this.total}`)
+                        }
+                    })
                 }
             } else {
                 this.$toast('请填写收货地址')
@@ -267,7 +275,7 @@ $footer-height: 58px * 2;
     width: 124px * 2;
     height: 41px * 2;
     line-height: 41px * 2;
-    background: linear-gradient(45deg, #90B8FF 0%, #1864FF 100%);
+    background: linear-gradient(45deg, #313635 0%, #313635 30%);
     color: #fff;
     font-size: 18px * 2;
     text-align: center;

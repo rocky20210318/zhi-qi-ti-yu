@@ -155,7 +155,7 @@ export default {
             width: 660px;
             height: 88px;
             margin: 200px auto;
-            background-image: linear-gradient(45deg, #90B8FF 0%, #1864FF 100%);
+            background-image: linear-gradient(45deg, #313635 0%, #313635 30%);
             box-shadow: 0px 4px 30px 0px rgba(255, 61, 72, 0.39);
             border-radius: 60px;
             font-size: 32px;

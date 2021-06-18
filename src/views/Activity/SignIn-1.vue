@@ -1,19 +1,20 @@
 <template>
     <div id="SignIn-1">
-        <van-nav-bar class="nav" :border="false" fixed left-arrow @click-left="$router.go(-1)"/>
+        <!-- <van-nav-bar class="nav" :border="false" fixed left-arrow @click-left="$router.go(-1)"/> -->
         <div class="img-bg">
             <div><img src="../../assets/SignIn-1-content-1.png" alt=""></div>
             <div v-if="isShow"><img src="../../assets/SignIn-1-content-2.png" alt=""></div>
             <div v-else><img src="../../assets/SignIn-1-content-2-active.png" alt=""></div>
             <div class="rule">
                 <h3>活动时间</h3>
-                <p class="text">2021年1月15日10:00—2021年2月1日00:00</p>
+                <p class="text">2021年6月26日10:00—2021年7月10日00:00</p>
                 <h3>活动规则</h3>
                 <p class="text">1、用户进入签到页面签到，只能签到当天日期或补签之前的缺签日期。</p>
                 <p class="text">2、如用户出现作弊等违法违规行为我们有权撤销用户参与活动及奖励使用资格，并有权收回用户已经获得的权益。</p>
                 <p class="text">3、活动最终解释权归我司所有</p>
             </div>
             <div class="click" @click="showDialog" />
+            <basic-footer />
         </div>
     </div>
 </template>

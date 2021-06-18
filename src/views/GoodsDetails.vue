@@ -141,7 +141,7 @@
                 <goods-action-button
                     type="danger"
                     text="立即购买"
-                    color="linear-gradient(45deg, #90B8FF 0%, #1864FF 100%)"
+                    color="linear-gradient(45deg, #313635 0%, #888 100%)"
                     @click="isShowSku = true"
                 />
             </template>

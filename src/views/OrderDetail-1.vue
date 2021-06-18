@@ -9,7 +9,7 @@
                             src="../assets/address.png"
                             class="location-img"
                         > -->
-                        <van-icon name="map-marked" size="38" class="location-img" color="#313635" />
+                        <van-icon name="map-marked" size="38" class="location-img" color="linear-gradient(45deg, #313635 0%, #888 100%)" />
                         <div v-if="addressInfo" class="information" >
                             <div>
                                 <span class="name">{{ addressInfo.name }}</span>

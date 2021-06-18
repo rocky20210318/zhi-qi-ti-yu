@@ -75,20 +75,14 @@ export default {
             const listData = [
                 {
                     id: 1,
-                    price: 20,
-                    condition: 200,
+                    price: 10,
+                    condition: 99,
                     isReceive: false
                 },
                 {
                     id: 2,
-                    price: 50,
-                    condition: 300,
-                    isReceive: false
-                },
-                {
-                    id: 3,
-                    price: 120,
-                    condition: 500,
+                    price: 99,
+                    condition: 400,
                     isReceive: false
                 }
             ]

@@ -3,7 +3,7 @@
         <div>
             <van-row
                 type="flex"
-                justify="space-between"
+                justify="center"
                 align="center"
                 class="top-background"
             >
@@ -24,7 +24,7 @@
             </book-large-list>
             <div v-else>
                 <div class="cart-no-data">
-                    <img src="../assets/custom-empty-image.webp" class="cart-no-data-img" />
+                    <img src="../assets/custom-empty-image.png" class="cart-no-data-img" />
                     <p class="no-data-text-1">购物车空空如也</p>
                 </div>
             </div>
@@ -146,7 +146,7 @@ $footer-height: 58px * 2;
     margin-top: -80px;
     padding: 23px 34px 38px;
     height: 340px;
-    background: url('../assets/cart-bg.png')no-repeat;
+    background: url('../assets/my-top-bg.png')no-repeat;
     background-size: 100%;
     // background: linear-gradient(180deg, #fcd755 0%, #d81e06 100%);
     box-sizing: border-box;
@@ -174,13 +174,13 @@ $footer-height: 58px * 2;
     .totals {
         font-size: 24px * 2;
         font-weight: 500;
-        color: #ff202c;
+        color: #F4543C;
     }
     .buy-btn {
         width: 124px * 2;
         height: 41px * 2;
         line-height: 41px * 2;
-        background: linear-gradient(45deg, #90B8FF 0%, #1864FF 100%);
+        background: linear-gradient(45deg, #313635 0%, #313635 30%);
         color: #fff;
         font-size: 18px * 2;
         text-align: center;
@@ -206,7 +206,7 @@ $footer-height: 58px * 2;
     }
     .no-data-text-1 {
         font-size: 28px;
-        color: #111;
+        color: #999;
         text-align: center;
     }
 }

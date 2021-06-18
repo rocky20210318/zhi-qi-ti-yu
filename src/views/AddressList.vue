@@ -74,7 +74,7 @@ export default {
     }
     .van-button--danger {
         border: 0;
-        background: linear-gradient(45deg, #90B8FF 0%, #1864FF 100%);
+        background: linear-gradient(45deg, #313635 0%, #313635 30%);
     }
 }
 </style>

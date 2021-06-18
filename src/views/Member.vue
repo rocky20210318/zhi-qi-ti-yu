@@ -40,7 +40,7 @@
                     <p class="text">专属客服</p>
             </grid-item>
         </grid>
-        <div class="button"><Button size="large" color="linear-gradient(45deg, #90B8FF 0%, #1864FF 100%)" @click="$router.push('/pay-list')" class="">88元即刻开通</Button></div>
+        <div class="button"><Button size="large" color="linear-gradient(45deg, #313635 0%, #888 100%)" @click="$router.push('/pay-list')" class="">88元即刻开通</Button></div>
         <div v-show="isShowPayMethod" class="payMethod" @click="isShowPayMethod = false">
             <ul class="payList">
                 <!-- <li><p class="">支付宝信支付正在接入中</p></li> -->

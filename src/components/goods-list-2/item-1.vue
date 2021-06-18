@@ -1,7 +1,7 @@
 <template>
-    <router-link :to="`/goods-details/${details.id}`" class="product-list-item-1">
+    <router-link v-show="isShow" :to="`/goods-details/${details.id}`" class="product-list-item-1">
         <van-row type="flex" align="center" justify="space-between" class="flex">
-            <div class=""><van-image fit="cover" lazy-load :src="details.thumbnail" class="img" /></div>
+            <div class=""><van-image fit="cover" lazy-load :src="details.thumbnail" class="img" @error="isShow = false" /></div>
             <div class="data">
                 <p class="van-multi-ellipsis--l2 title">{{ details.title }}</p>
                 <van-row type="flex" align="center" justify="space-between">
@@ -9,7 +9,8 @@
                     <span class="original-price">￥{{ Math.floor(details.price / 0.9) }}</span>
                     <router-link :to="`/goods-details/${details.id}?cart=true`">
                         <!-- <tag type="primary" plain>限时包邮</tag> -->
-                        <img src="../../assets/cart-icon.png" class="cart-icon" @click.stop="onAddCart(item)">
+                        <!-- <img src="../../assets/cart-icon.png" class="cart-icon" @click.stop="onAddCart(item)"> -->
+                        <van-icon name="shopping-cart" size="0.5rem" color="#313635" class="cart-icon" @click.stop="onAddCart(item)"/>
                     </router-link>
                 </van-row>
             </div>
@@ -37,11 +38,13 @@ export default {
     },
     data () {
         return {
+            isShow: true
         }
     },
     computed: {
     },
     async created () {
+        // this.checkImgExists()
     },
     mounted () {
     },
@@ -65,6 +68,9 @@ export default {
     // background: #fff;
     // border-radius: 10px;
     // overflow: hidden;
+    &.hide {
+        display: none;
+    }
     .data {
         padding: 0 20px;
         flex: 1;
@@ -87,7 +93,7 @@ export default {
     .Price {
         font-size: 34px;
         line-height: 1;
-        color: #ff202c;
+        color: #F4543C;
         span {
             font-size: 24px
         }

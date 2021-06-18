@@ -1,13 +1,14 @@
 <template>
-    <router-link :to="`/goods-details/${details.id}`" class="product-list-item-1">
-        <div class=""><van-image width="100%" fit="cover" lazy-load :src="details.thumbnail" class="img" /></div>
+    <router-link v-show="isShow" :to="`/goods-details/${details.id}`" class="product-list-item-1">
+        <div class=""><van-image width="100%" fit="cover" lazy-load :src="details.thumbnail" class="img" @error="isShow = false" /></div>
         <p class="van-ellipsis title">{{ details.title }}</p>
         <van-row type="flex" align="center" justify="space-between" class="data">
             <p class="Price"><span>￥</span>{{ Math.floor(details.price ) }}</p>
             <p class="original-price">￥{{ Math.floor(details.price / 0.9) }}</p>
             <router-link :to="`/goods-details/${details.id}?cart=true`">
                 <!-- <tag type="primary" plain>限时包邮</tag> -->
-                <img src="../../assets/cart-icon.png" class="cart-icon" @click.stop="onAddCart(item)">
+                <!-- <img src="../../assets/cart-icon.png" class="cart-icon" @click.stop="onAddCart(item)"> -->
+                <van-icon name="shopping-cart" size="0.5rem" color="#313635" class="cart-icon" @click.stop="onAddCart(item)"/>
             </router-link>
         </van-row>
     </router-link>
@@ -33,6 +34,7 @@ export default {
     },
     data () {
         return {
+            isShow: true
         }
     },
     computed: {
@@ -47,6 +49,15 @@ export default {
                 addCart(item)
                 this.$toast('加入购物车成功')
             } else this.$router.push('/login')
+        },
+        checkImgExists (imgurl) {
+            const ImgObj = new Image()
+            ImgObj.src = imgurl
+            if (ImgObj.fileSize > 0 || (ImgObj.width > 0 && ImgObj.height > 0)) {
+                return true
+            } else {
+                return false
+            }
         }
     }
 }
@@ -77,7 +88,7 @@ export default {
     .Price {
         font-size: 34px;
         line-height: 1;
-        color: #ff202c;
+        color: #F4543C;
         span {
             font-size: 24px
         }

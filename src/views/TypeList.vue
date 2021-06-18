@@ -91,7 +91,7 @@ export default {
 <style lang="scss">
 #type-list {
     .van-sidebar-item--select::before {
-        background-color: #3377FF;
+        background-color: #313635;
     }
 }
 </style>
@@ -142,8 +142,8 @@ export default {
             color: #888;
             line-height: 1;
             &.active {
-                border-color: #3578FF;
-                color: #3578FF;
+                border-color: #313635;
+                color: #313635;
             }
         }
     }
