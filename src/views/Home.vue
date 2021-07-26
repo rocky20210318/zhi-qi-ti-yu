@@ -15,7 +15,7 @@
             <router-link to="/search?keys=软壳衣裤" class="itme-2" />
             <router-link to="/search?keys=抓绒衣裤" class="itme-3" />
             <router-link to="/search?keys=健身服" class="itme-4" />
-            <router-link to="/type-list" class="itme-5" />
+            <router-link to="/sign-in-1" class="itme-5" />
         </div>
         <Divider class="recommend">热卖推荐</Divider>
         <GoodsList ref="goodsList" :max-page-index="1" class="goods-list"/>
